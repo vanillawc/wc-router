@@ -11,7 +11,7 @@ todo
 
 ## Usage NOTE
 
-- **production ready:** nope, definitely not
+- production ready: **nope**, definitely not
 
 
 ## Usage example
