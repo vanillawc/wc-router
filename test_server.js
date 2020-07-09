@@ -7,7 +7,7 @@ const app = new Application();
 app.use((ctx) => {
   const path = ctx.request.url.pathname
   console.log("requested file:", "." + path, "file exists:", existsSync("." + path))
-  if(existsSync("." + path)){
+  if(existsSync("." + path) && !(path === "/")){
     ctx.response.body = readFileStrSync("." + path, { encoding: "utf8" })
 
     if(path.endsWith(".js"))

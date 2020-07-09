@@ -20,6 +20,13 @@ todo
 lazy loading is default behaviour, put the "eager" attribute to change this !,
 you may add it per router/per route
 
+
+## testing
+
+- install [deno](https://deno.land/#installation)
+- install [velociraptor](https://github.com/umbopepato/velociraptor)
+- run the test file with `vr test`
+
 ### Routing
 
 ```html
