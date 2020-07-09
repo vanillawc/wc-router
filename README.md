@@ -12,13 +12,10 @@ todo
 ## Usage NOTE
 
 - production ready: **nope**, definitely not
+- lazy loading is default behaviour, put the "eager" attribute to change this !,
 
 
 ## Usage example
-
-**Usage note** : 
-lazy loading is default behaviour, put the "eager" attribute to change this !,
-you may add it per router/per route
 
 
 ## testing
