@@ -26,6 +26,7 @@ you may add it per router/per route
 - install [deno](https://deno.land/#installation)
 - install [velociraptor](https://github.com/umbopepato/velociraptor)
 - run the test file with `vr test`
+- open `localhost:8000` in a browser
 
 ### Routing
 
