@@ -1,0 +1,71 @@
+import chahiye from "https://cdn.jsdelivr.net/gh/therealadityashankar/chahiye@0.5.0/chahiye.js"
+import WCRouter from "./wc-router.js"
+import WCRoute from "./wc-route.js"
+
+window.wcroute = {
+  WCRoute,
+  WCRouter,
+  basePath: [],
+  currentPath: location.pathname.split("/").slice(1),
+}
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  // there can only be one wc-router in the top level
+  const WCRouter = document.getElementsByTagName("wc-router")[0] 
+  const WCRouterOptions = document.getElementsByTagName("wc-router-options")[0]
+
+  WCRouter.setMainPage()
+
+  if(WCRouterOptions){
+    wcroute.basePath = WCRouterOptions.getAttribute("base-path").split("/")
+    for(let path of wcroute.basePath){
+      if(path === wcroute.currentPath[0]) wcroute.currentPath.pop(0)
+      else{
+        console.error(`wcrouter: basePath path is not in location.PathName, 
+basePath element: "${path}", location.pathname Element : "${wcroute.currentPath[0]}"
+wcroute.currentPath : "${wcroute.currentPath}",
+wcroute.basePath : "${wcroute.basePath}"
+`)
+        console.trace()
+      }
+    }
+  }
+
+  if(WCRouter) setRequiredRoutes(WCRouter, 0);
+});
+
+
+/**
+ * open and set the required routes
+ * in WCRouters, based in the current path
+ *
+ * @param {object} toOpen - the wc-router to open
+ * @param {array} pathNum - the path index of window.wcroute.currentPath the recursivity is on
+ */
+function setRequiredRoutes(toOpen, pathNum){
+  const currentPath = wcroute.currentPath[pathNum]
+  
+  if(currentPath){
+    toOpen.setRoute(currentPath)
+    toOpen.basePath = wcroute.currentPath.slice(0, pathNum)
+  } 
+
+  if(pathNum + 1 < wcroute.currentPath.length){
+    const nextWCRouter = toOpen.getElementsByTagName("wc-router")[0]
+    if(!nextWCRouter) toOpen.setCatchAll()
+
+    nextWCRouter.parentRouter = toOpen;
+    nextWCRouter.setMainPage()
+    setRequiredRoutes(nextWCRouter, pathNum + 1)
+  } 
+}
+
+async function getStyleSheet(){ 
+  // get the css file, don't show anything before that !
+  document.getElementsByTagName("wc-router").style = "display: none"
+  const stylesheet = await chahiye.load("linkCSS", "./index.css", import.meta.url)
+  document.getElementsByTagName("wc-router").style = ""
+}
+
+getStyleSheet()

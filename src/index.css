@@ -1,0 +1,7 @@
+wc-route{
+    display: none;
+}
+
+wc-route[current]{
+    display: block;
+}
