@@ -1,1 +1,0 @@
-- remove limitation of having to be in location.pathname = "" for this to work properly
