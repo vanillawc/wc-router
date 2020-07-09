@@ -51,6 +51,9 @@ you may add it per router/per route
 - **eager**: get files in advance
 
 ### wc-route
-- **eager**: get files in advance
+- **eager**: [boolean attribute] get files in advance
 - **file**: the file to load
 - **path**: the path the wc-route represents
+- **catch-all**: [boolean attribute] if this represents the catch all
+
+[boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
