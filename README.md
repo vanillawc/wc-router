@@ -52,4 +52,5 @@ you may add it per router/per route
 
 ### wc-route
 - **eager**: get files in advance
--
+- **file**: the file to load
+- **path**: the path the wc-route represents
