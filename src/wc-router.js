@@ -34,26 +34,37 @@ export default class WCRouter extends HTMLElement{
    * @param {string} path - the path of the route that should be selected
    */
   async setRoute(path){
+    if(path === ""){
+      await this.setMainPage()
+      return
+    }
+    if(path.startsWith("/")) path = path.substring(1)
+
+    let pathParts = path.split("/")
     let pathNotFound = true
     let routes = [...this.routes];
 
     for(let route of routes){
-      if(route.path === path){
+      if(route.path === pathParts[0]){
         route.setAttribute("current", "")
         await route.getContent()
         pathNotFound = false
+
+        if(pathParts.length > 1){
+          const nextRouter = route.getElementsByTagName("wc-router")
+          await nextRouter.setRoute(pathParts.split(1).join("/"))
+        }
       }
       else route.removeAttribute("current")
     }
 
     if(pathNotFound){this.setCatchAll()}
-
-    this.setRouteHistory(path)
+    if(pathParts.length === 1) this.setRouteHistory(pathParts[0])
   }
 
   /** sets the route history to the current route, if the history api is available*/
   setRouteHistory(path){
-    const totalPath = wcroute.basePath.concat(this.basePath)
+    const totalPath = wcrouter.basePath.concat(this.basePath)
     totalPath.push(path)
 
     const totalPathString = totalPath.join("/")

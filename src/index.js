@@ -1,12 +1,18 @@
 import chahiye from "https://cdn.jsdelivr.net/gh/therealadityashankar/chahiye@0.5.0/chahiye.js"
+import RA from "./r-a.js"
 import WCRouter from "./wc-router.js"
 import WCRoute from "./wc-route.js"
 
-window.wcroute = {
+window.wcrouter = {
   WCRoute,
   WCRouter,
+  RA,
+  /** the topmost router*/
+  mainrouter : undefined,
   basePath: [],
-  currentPath: location.pathname.split("/").slice(1),
+  get currentPath(){
+    return location.pathname.split("/").slice(1)
+  },
 }
 
 
@@ -15,17 +21,18 @@ window.addEventListener('DOMContentLoaded', () => {
   const WCRouter = document.getElementsByTagName("wc-router")[0] 
   const WCRouterOptions = document.getElementsByTagName("wc-router-options")[0]
 
+  wcrouter.mainrouter = WCRouter;
   WCRouter.setMainPage()
 
   if(WCRouterOptions){
-    wcroute.basePath = WCRouterOptions.getAttribute("base-path").split("/")
-    for(let path of wcroute.basePath){
-      if(path === wcroute.currentPath[0]) wcroute.currentPath.pop(0)
+    wcrouter.basePath = WCRouterOptions.getAttribute("base-path").split("/")
+    for(let path of wcrouter.basePath){
+      if(path === wcrouter.currentPath[0]) wcroute.currentPath.pop(0)
       else{
         console.error(`wcrouter: basePath path is not in location.PathName, 
-basePath element: "${path}", location.pathname Element : "${wcroute.currentPath[0]}"
-wcroute.currentPath : "${wcroute.currentPath}",
-wcroute.basePath : "${wcroute.basePath}"
+basePath element: "${path}", location.pathname Element : "${wcrouter.currentPath[0]}"
+wcrouter.currentPath : "${wcroute.currentPath}",
+wcrouter.basePath : "${wcroute.basePath}"
 `)
         console.trace()
       }
@@ -36,22 +43,28 @@ wcroute.basePath : "${wcroute.basePath}"
 });
 
 
+window.addEventListener("popstate", () => {
+  console.log("now:", wcrouter.currentPath.join("/"));
+  wcrouter.mainrouter.setRoute(wcrouter.currentPath.join("/"))
+})
+
+
 /**
  * open and set the required routes
  * in WCRouters, based in the current path
  *
  * @param {object} toOpen - the wc-router to open
- * @param {array} pathNum - the path index of window.wcroute.currentPath the recursivity is on
+ * @param {array} pathNum - the path index of window.wcrouter.currentPath the recursivity is on
  */
 function setRequiredRoutes(toOpen, pathNum){
-  const currentPath = wcroute.currentPath[pathNum]
+  const currentPath = wcrouter.currentPath[pathNum]
   
   if(currentPath){
     toOpen.setRoute(currentPath)
-    toOpen.basePath = wcroute.currentPath.slice(0, pathNum)
+    toOpen.basePath = wcrouter.currentPath.slice(0, pathNum)
   } 
 
-  if(pathNum + 1 < wcroute.currentPath.length){
+  if(pathNum + 1 < wcrouter.currentPath.length){
     const nextWCRouter = toOpen.getElementsByTagName("wc-router")[0]
     if(!nextWCRouter) toOpen.setCatchAll()
 

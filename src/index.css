@@ -5,3 +5,9 @@ wc-route{
 wc-route[current]{
     display: block;
 }
+
+r-a, r-a[repr-type="link"]{
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
