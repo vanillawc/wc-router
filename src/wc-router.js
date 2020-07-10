@@ -75,10 +75,13 @@ export default class WCRouter extends HTMLElement{
   /**
    * sets the main page
    */
-  setMainPage(){
+  async setMainPage(){
     for (let route of this.routes) route.removeAttribute("current")
     let main = this.querySelector("wc-route[main]")
-    if(main) main.setAttribute("current", "")
+    if(main){
+      main.setAttribute("current", "")
+      await main.getContent()
+    }
   }
 }
 

@@ -55,7 +55,6 @@ export default class WCRoute extends HTMLElement{
     if(this._content) return this._content
 
     const url = (new URL(this.file, location.href)).href
-    console.log(url);
     const resp = await fetch(url);
     const text = await resp.text()
 
