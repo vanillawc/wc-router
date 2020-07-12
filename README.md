@@ -6,17 +6,15 @@ go up, go down, now turn left, nope its not there
 
 ## Installation
 
-todo
-
+script tags:
+```html
+<script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@0/src/index.js">
+```
 
 ## Usage NOTE
 
 - production ready: **nope**, definitely not
 - lazy loading is default behaviour, put the "eager" attribute to change this !,
-
-
-## Usage example
-
 
 ## testing
 
@@ -25,7 +23,15 @@ todo
 - run the test file with `vr test`
 - open `localhost:8000` in a browser
 
+### Tags
+
+- `<wc-router-options>`
+- `<wc-router>`
+- `<wc-route>`
+- `<r-a>`
+
 ### Routing
+## Usage example
 
 ```html
 <wc-router>
@@ -39,7 +45,7 @@ todo
 ### Linking
 
 ```html
-<wc-ra href="/page3"></wc-ra>
+<r-a href="/page3"></r-a>
 ```
 
 ## Attributes
