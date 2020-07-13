@@ -45,7 +45,7 @@ export default class WCRouter extends HTMLElement{
     let routes = [...this.routes];
 
     for(let route of routes){
-      if(route.path === pathParts[0]){
+      if(route.path === "/" + pathParts[0]){
         route.setAttribute("current", "")
         await route.getContent()
         pathNotFound = false
