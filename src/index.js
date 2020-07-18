@@ -11,8 +11,20 @@ window.wcrouter = {
   mainrouter : undefined,
   basePath: [],
   get currentPath(){
-    return location.pathname.split("/").slice(1)
+    const fullPath = location.pathname.split("/").slice(1)
+
+    for(let path of wcrouter.basePath){
+      if(path === fullPath[0]) fullPath.pop(0)
+
+      else{
+        console.error(`wcrouter: basePath path is not in location.PathName,
+(check if the base-path attribute in wc-router-options is correct !)`)
+      }
+    }
+
+    return fullPath
   },
+  currentFile: location.origin
 }
 
 
@@ -21,24 +33,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const WCRouter = document.getElementsByTagName("wc-router")[0] 
   const WCRouterOptions = document.getElementsByTagName("wc-router-options")[0]
 
-  wcrouter.mainrouter = WCRouter;
-
-  if(WCRouterOptions){
-    wcrouter.basePath = WCRouterOptions.getAttribute("base-path").split("/")
-    for(let path of wcrouter.basePath){
-      if(path === wcrouter.currentPath[0]) wcroute.currentPath.pop(0)
-      else{
-        console.error(`wcrouter: basePath path is not in location.PathName, 
-basePath element: "${path}", location.pathname Element : "${wcrouter.currentPath[0]}"
-wcrouter.currentPath : "${wcroute.currentPath}",
-wcrouter.basePath : "${wcroute.basePath}"
-`)
-        console.trace()
-      }
-    }
+  if(WCRouterOptions) wcrouter.basePath = WCRouterOptions.getAttribute("base-path").split("/")
+  if(WCRouter) {
+    WCRouter.setRoute(wcrouter.currentPath.join("/"))
+    wcrouter.mainrouter = WCRouter;
   }
-
-  if(WCRouter) WCRouter.setRoute(wcrouter.currentPath.join("/"))
 });
 
 

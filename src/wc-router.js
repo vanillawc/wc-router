@@ -1,3 +1,5 @@
+import WCRoute from "./wc-route.js"
+
 /**
  * the wc-router element
  *
@@ -8,12 +10,21 @@
 export default class WCRouter extends HTMLElement{
   constructor(){
     super()
-
-    // set at runtime
-    this.parentRouter = undefined;
     this.basePath = [];
+
+    let el = this
+    while(true){
+      if(el.parentNode instanceof WCRoute){
+        this.basePath.splice(0, 0, el.parentNode.path)
+      }
+      if(el.parentNode === document.body) break;
+      el = el.parentNode
+    }
+
+    if(this.hasAttribute("main")) this.basePath.pop()
   }
 
+  
   /**
    * all the routes in wc-router
    */
@@ -57,9 +68,17 @@ export default class WCRouter extends HTMLElement{
         await route.setupAsCurrent()
         pathNotFound = false
 
+        const nextRouter = route.getElementsByTagName("wc-router")[0]
+
         if(pathParts.length > 1){
-          const nextRouter = route.getElementsByTagName("wc-router")
-          await nextRouter.setRoute(pathParts.split(1).join("/"))
+          if(!nextRouter) throw Error(`wc-router: no wc-router inside ${route}, unable to route to ${path}`)
+          if(nextRouter.hasRouteOrCatchAll(pathParts.slice(1).join("/"))){
+            await nextRouter.setRoute(pathParts.slice(1).join("/"))
+          } else{
+            pathNotFound = true
+          }
+        } else{
+          if(nextRouter) {nextRouter.setMainPage()}
         }
       }
       else route.removeAttribute("current")
@@ -75,10 +94,12 @@ export default class WCRouter extends HTMLElement{
     totalPath.push(path)
 
     const totalPathString = totalPath.join("/")
-    
     // don't do anything if we're already at this location
     if("/" + totalPathString === location.pathname) return;
-    if(window.history) history.pushState({}, "", totalPathString)
+    if(window.history){
+      if(totalPathString === "") history.pushState({}, "", "/")
+      else history.pushState({}, "", totalPathString)
+    }
   }
 
   /**
@@ -87,7 +108,10 @@ export default class WCRouter extends HTMLElement{
   setCatchAll(){
     for (let route of this.routes) route.removeAttribute("current")
     let catchAllPage = this.querySelector("wc-route[catch-all]")
-    if(catchAllPage) catchAllPage.setAttribute("current", "")
+    if(catchAllPage){
+      catchAllPage.setAttribute("current", "")
+      catchAllPage.setupAsCurrent()
+    }
   }
 
   /**
@@ -100,6 +124,19 @@ export default class WCRouter extends HTMLElement{
       main.setAttribute("current", "")
       await main.getContent()
     }
+    this.setRouteHistory("")
+  }
+
+  /**
+   * returns true if the router has a catch all, or the specified route path
+   */
+  hasRouteOrCatchAll(path){
+    if(path.startsWith("/")) path = path.substring(1)
+    if(this.querySelector("wc-route[catch-all]")) return true
+    for (const route of this.routes) {
+      if(route.path === path) return true
+    }
+    return false
   }
 }
 

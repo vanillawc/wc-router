@@ -15,6 +15,7 @@ export default class WCRoute extends HTMLElement{
   constructor(){
     super() 
     if(this.eager) this.getContent();
+    this._previousCurrentFile = undefined;
   }
 
   /**
@@ -27,6 +28,12 @@ export default class WCRoute extends HTMLElement{
     if(routeEvents){
       if(routeEvents.load) routeEvents.load(this)
     }
+
+    if(this.file){
+      this._previousCurrentFile = wcrouter.currentFile
+      const url = (new URL(this.file, location.href)).href
+      wcrouter.currentFile = url
+    }
   }
 
   /**
@@ -37,6 +44,11 @@ export default class WCRoute extends HTMLElement{
 
     if(routeEvents){
       if(routeEvents.teardown) routeEvents.teardown(this)
+    }
+
+    if(this.file){
+      wcrouter.currentFile = this._previousCurrentFile
+      this._previousCurrentFile = undefined
     }
   }
   
@@ -85,7 +97,8 @@ export default class WCRoute extends HTMLElement{
    */
   async getRouteEvents(){
     if(this.hasAttribute("events-loc")){
-      return await import(this.getAttribute("events-loc"))
+      const href = (new URL(this.getAttribute("events-loc"), wcrouter.currentFile)).href
+      return await import(href)
     }
   }
 
@@ -98,6 +111,8 @@ export default class WCRoute extends HTMLElement{
     if(!this.liveReload){
       if(this.innerHTML.trim() != "") return this.innerHTML
     }
+
+    if(!this.file) return this.innerHTML
 
     const url = (new URL(this.file, location.href)).href
     const resp = await fetch(url);
