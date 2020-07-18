@@ -22,7 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const WCRouterOptions = document.getElementsByTagName("wc-router-options")[0]
 
   wcrouter.mainrouter = WCRouter;
-  WCRouter.setMainPage()
 
   if(WCRouterOptions){
     wcrouter.basePath = WCRouterOptions.getAttribute("base-path").split("/")
@@ -39,40 +38,14 @@ wcrouter.basePath : "${wcroute.basePath}"
     }
   }
 
-  if(WCRouter) setRequiredRoutes(WCRouter, 0);
+  if(WCRouter) WCRouter.setRoute(wcrouter.currentPath.join("/"))
 });
 
 
 window.addEventListener("popstate", () => {
-  console.log("now:", wcrouter.currentPath.join("/"));
   wcrouter.mainrouter.setRoute(wcrouter.currentPath.join("/"))
 })
 
-
-/**
- * open and set the required routes
- * in WCRouters, based in the current path
- *
- * @param {object} toOpen - the wc-router to open
- * @param {array} pathNum - the path index of window.wcrouter.currentPath the recursivity is on
- */
-function setRequiredRoutes(toOpen, pathNum){
-  const currentPath = wcrouter.currentPath[pathNum]
-  
-  if(currentPath){
-    toOpen.setRoute(currentPath)
-    toOpen.basePath = wcrouter.currentPath.slice(0, pathNum)
-  } 
-
-  if(pathNum + 1 < wcrouter.currentPath.length){
-    const nextWCRouter = toOpen.getElementsByTagName("wc-router")[0]
-    if(!nextWCRouter) toOpen.setCatchAll()
-
-    nextWCRouter.parentRouter = toOpen;
-    nextWCRouter.setMainPage()
-    setRequiredRoutes(nextWCRouter, pathNum + 1)
-  } 
-}
 
 async function getStyleSheet(){ 
   // get the css file, don't show anything before that !

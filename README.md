@@ -58,5 +58,6 @@ script tags:
 - **file**: the file to load
 - **path**: the path the wc-route represents
 - **catch-all**: ([boolean attribute]) if this represents the catch all
+- **live-reload**: loads the file every time the page is navigated to, instead of caching it
 
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes

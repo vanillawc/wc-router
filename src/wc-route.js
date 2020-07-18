@@ -5,13 +5,39 @@
  * - file : string - location of the file
  * - path : string - the path the route element represents
  * - eager : boolean parameter - load the file early ?
+ * - live-reload : boolean parameter - live reload the file, instead of caching it ?
+ * - events-loc : script location, has to be a module, that'll be called when the page is loaded
+ *   exported from module [everything is optional]
+ *   - load: the function called when the route is loaded
+ *   - teardown: the function called when the route is torn down
  */
 export default class WCRoute extends HTMLElement{
   constructor(){
     super() 
-    this._content = undefined;
-
     if(this.eager) this.getContent();
+  }
+
+  /**
+   * setup as the current page
+   */
+  async setupAsCurrent(){
+    const routeEvents = await this.getRouteEvents()
+    await this.getContent()
+
+    if(routeEvents){
+      if(routeEvents.load) routeEvents.load(this)
+    }
+  }
+
+  /**
+   * teardown as the current page
+   */
+  async teardownAsCurrent(){
+    const routeEvents = await this.getRouteEvents()
+
+    if(routeEvents){
+      if(routeEvents.teardown) routeEvents.teardown(this)
+    }
   }
   
   /**
@@ -48,19 +74,37 @@ export default class WCRoute extends HTMLElement{
   }
 
   /**
+   *
+   */
+  get liveReload(){
+    return this.router.hasAttribute("live-reload")||this.hasAttribute("live-reload")
+  }
+
+  /**
+   * returns object containing the events that are to happen
+   */
+  async getRouteEvents(){
+    if(this.hasAttribute("events-loc")){
+      return await import(this.getAttribute("events-loc"))
+    }
+  }
+
+  /**
    * async function, gets the content of the wc-route element
    */
   async getContent(){
-    if(this.innerText.trim() != "") this._content = this.innerText
-    if(this._content) return this._content
+    // if live reload is not true,
+    // and content has been loaded previously 
+    if(!this.liveReload){
+      if(this.innerHTML.trim() != "") return this.innerHTML
+    }
 
     const url = (new URL(this.file, location.href)).href
     const resp = await fetch(url);
     const text = await resp.text()
 
-    this._content = text;
     this.innerHTML = text;
-    return text;
+    return this.innerHTML;
   }
 }
 
