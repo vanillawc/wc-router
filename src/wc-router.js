@@ -94,8 +94,10 @@ export default class WCRouter extends HTMLElement{
     totalPath.push(path)
 
     const totalPathString = totalPath.join("/")
+    console.log(totalPathString, location.pathname)
     // don't do anything if we're already at this location
     if("/" + totalPathString === location.pathname) return;
+    if(totalPathString === location.pathname + "/") return;
     if(window.history){
       if(totalPathString === "") history.pushState({}, "", "/")
       else history.pushState({}, "", totalPathString)
