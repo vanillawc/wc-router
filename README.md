@@ -61,3 +61,6 @@ script tags:
 - **live-reload**: loads the file every time the page is navigated to, instead of caching it
 
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
+
+### Serving files (with a test server)
+`deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@0/src/server.js <main_file_name>`
