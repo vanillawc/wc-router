@@ -1,2 +1,2 @@
 scripts:
- test : deno run --allow-net --allow-read --unstable server.js ./test.html
+ test : deno run --allow-net --allow-read --unstable server.ts ./test.html
