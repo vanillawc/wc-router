@@ -126,9 +126,8 @@ describe('all tests', async function () {
 
   describe("test lazy-loading", async () => {
     it("tests lazy loading of a page", async () => {
-      page.click('r-a[href="/somewhere"]')
+      await page.click('r-a[href="/somewhere"]')
       await new Promise(res => setTimeout(res, 500))
-      await page.screenshot({path: 'example.png'});
       const innerHTML = (await page.evaluate(() => document.body.innerHTML))
       assert.ok(innerHTML.includes("some page with a variable at the top level"))
     })
