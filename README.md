@@ -8,7 +8,7 @@ go up, go down, now turn left, nope its not there
 
 script tags:
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@0/src/index.js">
+<script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@1/src/index.js">
 ```
 
 ## Usage NOTE
@@ -23,9 +23,10 @@ script tags:
 - `<wc-route>`
 - `<r-a>`
 
-### Routing
 
 ## Usage example
+
+### Routing
 
 ```html
 <wc-router>
@@ -38,15 +39,20 @@ script tags:
 </wc-router>
 ```
 
-- if a route part starts with **":"**, for example in **"/:variable/page4"**, here, the link may contain any variable in its place, and the link will redirect to this location, also note, this variables is accessable via **"window.wcrouter.params"**
+- if a route part starts with **":"**, for example in **"/:variable/page4"**, here, the link may contain any variable in its place (for example, "/alex/page4", "/jeremy/page4", "/clarkson/page4") , and the link will redirect to this location, also note, this variables is accessable via **window.wcrouter.params** in javascript
 - if a route part starts with **"path:"**, for example in **"/abc/path:all"** or **"/path:all"**, any route at and after this path will redirect to this page, again, the parts of this route will be visible in **window.wcrouter.params**
 - evaluation of wc-routes happens in order of appearance 
+
 
 ### Linking
 
 ```html
-<r-a href="/page3"></r-a>
+<r-a href="/page3">link to page 3 !</r-a>
 ```
+
+## Usage via Javascript
+
+- to reroute via javascript use, **"wcrouter.route(url)"**
 
 ## Attributes
 
@@ -65,7 +71,7 @@ script tags:
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
 
 ### Serving files (with a test server)
-`deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@0/src/server.ts <main_file_name>`
+`deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@1/src/server.ts <main_file_name>`
 
 ## testing the code here
 
