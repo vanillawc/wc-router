@@ -4,7 +4,7 @@ export default class RA extends HTMLElement{
     this.addEventListener("click", () => {
       const href = this.getAttribute('href')
       const url = new URL(href, window.location.href);
-      wcrouter.mainrouter.setRoute(url.pathname)
+      wcrouter.route(url.pathname)
     })
   }
 }

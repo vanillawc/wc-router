@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/src/index.js" type="module" charset="utf-8"></script>
+  </head>
+  <body>
+    <wc-router>
+      <wc-route path="/">
+          hi !, this is the first page !
+          <br>
+          <p>check out these other pages</p>
+          <r-a href="/one-level">one level page</r-a><br>
+          <r-a href="/one-level/two-level">two level page</r-a><br>
+          <r-a href="/one-level/two-level/3/4/5/6">6 lvl page</r-a><br>
+          <r-a href="/somewhere">somewhere</r-a><br>
+          <r-a href="/something/in-middle/someOtherThing">somewhere with a variable in the middle</r-a><br>
+          <r-a href="/something/var1/words/var2/someOtherThing">somewhere with some variables</r-a><br>
+          <r-a href="/non/existant/link">load catch all page</r-a><br>
+      </wc-route>
+      <wc-route path="/one-level">
+        <p>this is a one-level page</p>
+      </wc-route>
+      <wc-route path="/one-level/two-level">
+        <p>this is a two-level page</p>
+      </wc-route>
+      <wc-route path="/one-level/two-level/3/4/5/6">
+        <p>this is a 6-level page</p>
+      </wc-route>
+      <wc-route path="/:anything"
+                file="/test/test_files/loaded2.html">
+      </wc-route>
+      <wc-route path="/something/:pageVariable/someOtherThing">
+        <p>some page with a variable in the center</p>
+      </wc-route>
+      <wc-route path="/something/:pageVariable/words/:pageVariable2/someOtherThing">
+        <p>some other page with 2 variables</p>
+      </wc-route>
+      <wc-route path="/path:value">
+        <p>this is the catch-all page</p>
+      </wc-route>
+    </wc-router>
+  </body>
+</html>
+

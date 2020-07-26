@@ -18,6 +18,25 @@ export default class WCRoute extends HTMLElement{
     this._previousCurrentFile = undefined;
   }
 
+  static get observedAttributes() {
+    return ['current']
+  }
+
+  attributeChangedCallback(name, oldValue, newValue){
+    if(name === "current"){
+      if(typeof newValue === "string") this.setupAsCurrent()
+      else this.teardownAsCurrent()
+    }
+  }
+
+  get fullPath(){
+    return wcrouter.basePath + "/" + this.path.substring(1)
+  }
+
+  get url(){
+    return (new URL(location.href, this.fullpath)).href
+  }
+
   /**
    * setup as the current page
    */
@@ -62,13 +81,18 @@ export default class WCRoute extends HTMLElement{
   /**
    * gets the path of the wc-route element
    */
-  get path(){return this.getAttribute("path")}
+  get path(){
+    const path = this.getAttribute("path")
+
+    if(!path.startsWith("/")) return "/" + path
+    return path
+  }
 
   /**
    * read-only, is the wc-route eager loaded ?
    */
   get eager(){
-    return this.router.eager||this.hasAttribute("eager")
+    return this.router.hasAttribute("eager")||this.hasAttribute("eager")
   }
 
   /**
@@ -120,6 +144,54 @@ export default class WCRoute extends HTMLElement{
 
     this.innerHTML = text;
     return this.innerHTML;
+  }
+
+  /**
+   * check if path matches for the mentioned path
+   *
+   * @param {string} path - the path to match for
+   *
+   * @returns {object} - {matches : bool, params : obj}, params contains the params that are present in the path
+   */
+  matches(path){
+    path = (new URL(path, wcrouter.baseURL)).pathname
+    const fullPath = this.fullPath
+    const params = {}
+    const thisFullPathSplit = fullPath.split("/")
+    const pathSplit = path.split("/")
+
+    // the length of the pathsplit can never be lesser
+    if(pathSplit.length < thisFullPathSplit.length) return {matches:false}
+
+    for(let i=0; i<pathSplit.length; i++){
+      const thisPathVal = thisFullPathSplit[i]
+      const pathVal = pathSplit[i]
+
+      if(thisPathVal === undefined) return {matches:false}
+
+      if(thisPathVal.startsWith(":")){
+        const param = thisPathVal.substring(1)
+        params[param] = pathVal
+        continue;
+      }
+
+      if(thisPathVal.startsWith("path:")){
+        if(i !== thisFullPathSplit.length - 1) {
+          throw Error("wc-route: 'path:' can only be present at the end of a path, i.e. as a catch-all")
+        }
+        const param = thisPathVal.substring("path:".length)
+        params[param] = pathSplit.slice(i)
+
+        return {
+          matches : true,
+          params: params
+        }
+      }
+
+      if(thisPathVal !== pathVal) return {matches : false}
+    }
+
+    return {matches:true, params}
   }
 }
 

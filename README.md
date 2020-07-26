@@ -35,10 +35,10 @@ script tags:
 
 ```html
 <wc-router>
-  <wc-route main file="/pages/page1.html"></wc-route>
+  <wc-route path="/" file="/pages/page1.html"></wc-route>
   <wc-route path="/page2" file="/pages/page2.html"></wc-route>
   <wc-route path="/page3" file="/pages/page3.html" eager></wc-route>
-  <wc-route file="/pages/catch-all.html" catch-all></wc-route>
+  <wc-route path="/path:all" file="/pages/catch-all.html"></wc-route>
 </wc-router>
 ```
 
@@ -57,7 +57,9 @@ script tags:
 - **eager**: ([boolean attribute]) get files in advance
 - **file**: the file to load
 - **path**: the path the wc-route represents
-- **catch-all**: ([boolean attribute]) if this represents the catch all
+  - parts of a route are seperated by slashes, eg: **"/asbas/asvdsad/asds"**
+  - if you start a route-part with a ":" for eg: **"/asdcasdc/:param/def**, its treated as a string (and is visible from the 'wcrouter' variable in the window, in 'wc-router.params', with the word after ':' as the variable)
+  - if you start a route-part with "path:", eg: **"/asadc/path:sometgin"**, note this is only possible for route-parts in the end, all further part parts will be visible in 'wc-router.params["your-var"]'
 - **live-reload**: loads the file every time the page is navigated to, instead of caching it
 
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes

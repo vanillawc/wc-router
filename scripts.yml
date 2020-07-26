@@ -1,2 +1,3 @@
 scripts:
- test : deno run --allow-net --allow-read --unstable server.ts ./test.html
+ test-live : deno run --allow-net --allow-read --unstable server.ts ./test/test.html
+ test : cd test && npm run test && cd ..

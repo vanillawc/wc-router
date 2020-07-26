@@ -8,41 +8,81 @@ window.wcrouter = {
   WCRouter,
   RA,
   /** the topmost router*/
-  mainrouter : undefined,
-  basePath: [],
-  get currentPath(){
-    const fullPath = location.pathname.split("/").slice(1)
+  get mainrouter(){
+    return document.getElementsByTagName("wc-router")[0]
+  },
+  get basePath(){
+    const WCRouterOptions = document
+                              .getElementsByTagName("wc-router-options")[0]
 
-    for(let path of wcrouter.basePath){
-      if(path === fullPath[0]) fullPath.pop(0)
-
-      else{
-        console.error(`wcrouter: basePath path is not in location.PathName,
-(check if the base-path attribute in wc-router-options is correct !)`)
-      }
+    if(WCRouterOptions){
+      const path = WCRouterOptions.getAttribute("base-path")
+      if(path.startsWith("/")) return path
+      else return "/" + path
     }
 
-    return fullPath
+    return ""
   },
-  currentFile: location.origin
+
+  get baseURL(){return location.origin + this.basePath},
+  currentFile: location.origin,
+
+
+  /**
+   * set the correct wcroute to current
+   *
+   * @param {string} path - the path to set
+   */
+  route(path) {
+    if(path.endsWith("/")) path = path.substring(0, path.length - 1)
+    if(path === "") path = "/"
+
+    this.setMatchingWCRoute(path)
+    this.routeHistory(path)
+  },
+
+  setMatchingWCRoute(path){
+    const routeStuff = this.getMatchingRoute(path)
+    if(routeStuff){
+      if(this.currentRoute) this.currentRoute.removeAttribute("current")
+      routeStuff.wcroute.setAttribute("current", "")
+      wcrouter.params = routeStuff.matchDetails.params
+    } else{
+      throw Error(`wcroute - no route matching path '${path}'`)
+    }
+  },
+
+  getMatchingRoute(path){
+    for (const wcroute of document.getElementsByTagName("wc-route")) {
+      const matches = wcroute.matches(path)
+      if(matches.matches) {
+        return {wcroute, matchDetails: matches}
+      }
+    }
+  },
+
+  routeHistory(path){ 
+    if(window.history) {
+      if(location.pathname === path||location.pathname === path + "/")
+        return
+      else history.pushState({}, "", path)
+    }
+  },
+
+  get currentRoute(){
+    return document.querySelector("wc-route[current]")
+  }
 }
 
 
 window.addEventListener('DOMContentLoaded', () => {
-  // there can only be one wc-router in the top level
-  const WCRouter = document.getElementsByTagName("wc-router")[0] 
-  const WCRouterOptions = document.getElementsByTagName("wc-router-options")[0]
-
-  if(WCRouterOptions) wcrouter.basePath = WCRouterOptions.getAttribute("base-path").split("/")
-  if(WCRouter) {
-    WCRouter.setRoute(wcrouter.currentPath.join("/"))
-    wcrouter.mainrouter = WCRouter;
-  }
+  wcrouter.route(location.pathname)
+  const wcroutes = [...document.getElementsByTagName("wc-route")]
 });
 
 
 window.addEventListener("popstate", () => {
-  wcrouter.mainrouter.setRoute(wcrouter.currentPath.join("/"))
+  wcrouter.route(location.pathname)
 })
 
 
