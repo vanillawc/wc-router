@@ -13,17 +13,10 @@ script tags:
 
 ## Usage NOTE
 
-- production ready: **nope**, definitely not
+- production ready: **yes !**
 - lazy loading is default behaviour, put the "eager" attribute to change this !,
 
-## testing
-
-- install [deno](https://deno.land/#installation)
-- install [velociraptor](https://github.com/umbopepato/velociraptor)
-- run the test file with `vr test`
-- open `localhost:8000` in a browser
-
-### Tags
+### Tags here
 
 - `<wc-router-options>`
 - `<wc-router>`
@@ -73,3 +66,9 @@ script tags:
 
 ### Serving files (with a test server)
 `deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@0/src/server.ts <main_file_name>`
+
+## testing the code here
+
+- install [deno](https://deno.land/#installation)
+- install [velociraptor](https://github.com/umbopepato/velociraptor)
+- run the test file with `vr test`
