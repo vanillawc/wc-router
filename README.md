@@ -31,6 +31,7 @@ script tags:
 - `<r-a>`
 
 ### Routing
+
 ## Usage example
 
 ```html
@@ -38,9 +39,12 @@ script tags:
   <wc-route path="/" file="/pages/page1.html"></wc-route>
   <wc-route path="/page2" file="/pages/page2.html"></wc-route>
   <wc-route path="/page3" file="/pages/page3.html" eager></wc-route>
+  <wc-route path="/:variable/page4" file="/pages/page3.html" eager></wc-route>
   <wc-route path="/path:all" file="/pages/catch-all.html"></wc-route>
 </wc-router>
 ```
+
+- if a route part starts with ":", for example in "/:variable/page4", here, the link may contain any variable in its place, and the link will redirect to this location, also note, this variables is accessable via "window.wcrouter.params"
 
 ### Linking
 
