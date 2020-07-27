@@ -67,6 +67,9 @@ script tags:
   - if you start a route-part with a ":" for eg: **"/asdcasdc/:param/def**, its treated as a string (and is visible from the 'wcrouter' variable in the window, in 'wc-router.params', with the word after ':' as the variable)
   - if you start a route-part with "path:", eg: **"/asadc/path:sometgin"**, note this is only possible for route-parts in the end, all further part parts will be visible in 'wc-router.params["your-var"]'
 - **live-reload**: loads the file every time the page is navigated to, instead of caching it
+- **events-loc**: If you want to load javascript events when a page loads, place them here, the following functions exported in the module mean the following, (all names are optional)
+  - **load** - if a load function is exported, it'll be called after the wc-route loads, the wc-route element is passed on to the function
+  - **teardown** - if a teardown function is exported, it'll be called when the route changes, the wc-route element is passed on the function
 
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
 
