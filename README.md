@@ -74,7 +74,7 @@ script tags:
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
 
 ### Serving files (with a test server)
-`deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@1/src/server.ts <main_file_name>`
+`deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@1/server.ts <main_file_name>`
 
 ## testing the code here
 
