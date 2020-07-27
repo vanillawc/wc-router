@@ -14,6 +14,10 @@
 export default class WCRoute extends HTMLElement{
   constructor(){
     super() 
+    this.contentLoaded = false
+    if(!this.hasAttribute("file")) this.contentLoaded = true
+
+
     if(this.eager) this.getContent();
     this._previousCurrentFile = undefined;
   }
@@ -133,16 +137,18 @@ export default class WCRoute extends HTMLElement{
     // if live reload is not true,
     // and content has been loaded previously 
     if(!this.liveReload){
-      if(this.innerHTML.trim() != "") return this.innerHTML
+      if(this.contentLoaded) return this.innerHTML
     }
 
     if(!this.file) return this.innerHTML
 
+    this.innerHTML = "loading content..."
     const url = (new URL(this.file, location.href)).href
     const resp = await fetch(url);
     const text = await resp.text()
 
     this.innerHTML = text;
+    this.contentLoaded = true
     return this.innerHTML;
   }
 
