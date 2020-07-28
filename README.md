@@ -96,5 +96,10 @@ i.e. `window.wcrouter.addEventListener(<event-name>, <callback>)`
 ## testing the code here
 
 - install [deno](https://deno.land/#installation)
+- install [node](https://nodejs.org/en/)
+- install testing dependencies,
+  + go into the test directory (via `cd test`)
+  + npm i
+  + go back to the main directory
 - install [velociraptor](https://github.com/umbopepato/velociraptor)
 - run the test file with `vr test`
