@@ -8,7 +8,7 @@ go up, go down, now turn left, nope its not there
 
 script tags:
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@1/src/index.js">
+<script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2/src/index.js">
 ```
 
 ## Usage NOTE
@@ -91,7 +91,7 @@ i.e. `window.wcrouter.addEventListener(<event-name>, <callback>)`
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
 
 ### Serving files (with a test server)
-`deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@1/server.ts <main_file_name>`
+`deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2/server.ts <main_file_name>`
 
 ## testing the code here
 
