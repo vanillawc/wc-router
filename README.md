@@ -58,9 +58,9 @@ script tags:
 
 ### events
 
-these events are accessable via wc-router
+these events are accessable via the window wcrouter variable
 
-i.e. `wcrouter.addEventListener(<event-name>, <callback>)`
+i.e. `window.wcrouter.addEventListener(<event-name>, <callback>)`
 
 - **routeLoad**: 
   - **when :** called the first time a route is loaded
