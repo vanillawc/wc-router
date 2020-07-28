@@ -28,8 +28,8 @@ after(async () => {
   await browser.close()
 })
 
-describe('all tests', async function () {
-  this.timeout(10000) 
+describe('all tests', function () {
+  this.timeout(1500) 
   describe('path matching', async function () {
     it('matches a 1 level absolute path correctly', async function () {
       await page.goto('http://localhost:3000/')
@@ -144,27 +144,27 @@ describe('all tests', async function () {
   })
 
   describe("test route load event dispatch", async () => {
-    it("checks what it needs to", async () => {
-      page.click('r-a[href="/one-level/two-level/3/4/5/6"]')
+    it("check page load event dispatch", async () => { 
       const waitRouteChange = () => {
-        return new Promise(res => window.wcrouter.addEventListener("routeLoad",res))
+        return new Promise(res => window.wcrouter.addEventListener("routeLoad",e => res(e.detail)))
       }
-      await page.evaluate(waitRouteChange)
+      await Promise.all([page.click('r-a[href="/test-load-route"]'), 
+                        page.evaluate(waitRouteChange)])
+      await page.goBack()
+    })
+
+    it("check page change event dispatch and firstLoad Variable", async () => {
+      page.click('r-a[href="/test-load-route"]')
+      const getFirstLoad = () => {
+        return new Promise(res => window
+                            .wcrouter
+                            .addEventListener("routeChange", e => res(e.detail)))
+      };
+      const firstLoad = (await page.evaluate(getFirstLoad)).currentRoute.firstLoad
+      assert.ok(!firstLoad)
       await page.goBack()
     })
   })
 
-  describe("test route change event dispatch, and WCRoute.firstLoad variable", async () => {
-    it("checks what it needs to", async () => {
-      page.click('r-a[href="/one-level/two-level/3/4/5/6"]')
-      const getFirstLoad = () => {
-        return new Promise(res => window
-                            .wcrouter
-                            .addEventListener("routeChange", e => res(e.detail.currentRoute.firstLoad)))
-      };
-      const firstLoad = await page.evaluate(getFirstLoad)
-      assert.ok(!firstLoad)
-    })
-  })
 });
 

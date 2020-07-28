@@ -54,9 +54,6 @@ export default class WCRoute extends HTMLElement{
       const url = (new URL(this.file, location.href)).href
       wcrouter.currentFile = url
     }
-
-    if(this.firstLoad === undefined) this.firstLoad = true
-    else if(this.firstLoad) this.firstLoad = false
   }
 
   /**

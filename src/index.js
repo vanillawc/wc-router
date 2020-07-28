@@ -49,8 +49,14 @@ class RouterTools extends EventTarget{
     const currentRoute = this.currentRoute;
     this.dispatchEvent(new CustomEvent("routeChange", {detail: {lastRoute, currentRoute}}))
 
-    if(this.currentRoute.firstLoad)
+    if(this.currentRoute.firstLoad === undefined){
+      this.currentRoute.firstLoad = true
       this.dispatchEvent(new CustomEvent("routeLoad", {detail: {lastRoute, currentRoute}}))
+    }
+
+    else if(this.currentRoute.firstLoad){
+      this.currentRoute.firstLoad = false
+    }
 
   }
 
