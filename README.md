@@ -64,11 +64,15 @@ i.e. `window.wcrouter.addEventListener(<event-name>, <callback>)`
 
 - **routeLoad**: 
   - **when :** called the first time a route is loaded
-  - **callback parameters:** (detail.lastRoute: the previous route, detail.currentRoute: the current route)
+  - **callback parameters:** 
+    + **event.detail.lastRoute**: the previous route
+    + **event.detail.currentRoute**: the current route)
 
 - **routeChange**: 
   - **when :** called every time a route change
-  - **callback parameters:** (detail.lastRoute: the previous route, detail.currentRoute: the current route)
+  - **callback parameters:** 
+    + **event.detail.lastRoute**: the previous route
+    + **event.detail.currentRoute**: the current route)
 
 ## Attributes
 
