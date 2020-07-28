@@ -26,6 +26,8 @@ script tags:
 
 ## Usage example
 
+**Note :** see the complete usage guide [here](https://github.com/vanillawc/wc-router/blob/master/usage-guide.md)
+
 ### Routing
 
 ```html
