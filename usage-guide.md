@@ -113,6 +113,42 @@ using these concepts we can change the code to
 
 and save it, now visit `http://localhost:4507/howdy/ald`, and you should see `howdy ald !`
 
+## 404 page
+
+- oh no, what if my user accesses a page that does not exist !, how do I tell him that ?
+
+well, fear not, we'll add an additional path `<wc-route path="/path:everything:>` at the very end
+
+like,
+
+```html
+<html>
+  <head>
+    <title>simple wc-router tutorial</title>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2/src/index.js"></script>
+    <script type="module">
+      wcrouter.addEventListener("routeChange", e => {
+        if(e.detail.currentRoute.path === "/howdy/:name"){
+          e.detail.currentRoute.innerHTML = `howdy ${wcrouter.params.name} !`
+        }
+      })
+    </script>
+  </head>
+  <body>
+    <wc-router>
+      <wc-route path="/">hi there, check out <r-a href="/howdy">the howdy page</r-a> !</wc-route>
+      <wc-route path="/howdy">howdy yo!</wc-route>
+      <wc-route path="/howdy/:name">howdy yo !</wc-route>
+      <wc-route path="/path:everything">oh no this page does not exist, go back <r-a href="/">home</r-a>!</wc-route>
+    </wc-router>
+  </body>
+</html>
+```
+
+- now try navigating to a page that does not exist, like `http://localhost:4507/asda/` and you should see
+
+`oh no this page does not exist, go back home!`
+
 ## dividing html in routes
 
 you often might need to use more html in routes, you may load them into the `<wc-route>` via the `file` parameter, for example: `<wc-route path="/location" file="/path/to/my/file.html">`
