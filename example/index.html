@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>simple wc-router tutorial</title>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2/src/index.js"></script>
+    <script type="module">
+      wcrouter.addEventListener("routeChange", e => {
+        if(e.detail.currentRoute.path === "/howdy/:name"){
+          e.detail.currentRoute.innerHTML = `howdy ${wcrouter.params.name} !`
+        }
+      })
+    </script>
+  </head>
+  <body>
+    <wc-router>
+      <wc-route path="/">hi there, check out <r-a href="/howdy">the howdy page</r-a> !</wc-route>
+      <wc-route path="/howdy">howdy yo!</wc-route>
+      <wc-route path="/howdy/:name">howdy yo !</wc-route>
+    </wc-router>
+  </body>
+</html>
+
