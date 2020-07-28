@@ -52,7 +52,23 @@ script tags:
 
 ## Usage via Javascript
 
+### rerouting
+
 - to reroute via javascript use, **"wcrouter.route(url)"**
+
+### events
+
+these events are accessable via wc-router
+
+i.e. `wcrouter.addEventListener(<event-name>, <callback>)`
+
+- **routeLoad**: 
+  - **when :** called the first time a route is loaded
+  - **callback parameters:** (detail.lastRoute: the previous route, detail.currentRoute: the current route)
+
+- **routeChange**: 
+  - **when :** called every time a route change
+  - **callback parameters:** (detail.lastRoute: the previous route, detail.currentRoute: the current route)
 
 ## Attributes
 
