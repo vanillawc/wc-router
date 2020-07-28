@@ -2,7 +2,7 @@ wc-router
 --------
 go up, go down, now turn left, nope its not there
 
-![wc router logo]("logo.svg")
+![wc router logo](logo.svg)
 
 ## Installation
 
