@@ -14,6 +14,8 @@
 export default class WCRoute extends HTMLElement{
   constructor(){
     super() 
+    // is this the first time the page has been loaded
+    this.firstLoad = undefined;
     this.contentLoaded = false
     if(!this.hasAttribute("file")) this.contentLoaded = true
 
@@ -45,30 +47,22 @@ export default class WCRoute extends HTMLElement{
    * setup as the current page
    */
   async setupAsCurrent(){
-    const routeEvents = await this.getRouteEvents()
     await this.getContent()
-
-    if(routeEvents){
-      if(routeEvents.load) routeEvents.load(this)
-    }
 
     if(this.file){
       this._previousCurrentFile = wcrouter.currentFile
       const url = (new URL(this.file, location.href)).href
       wcrouter.currentFile = url
     }
+
+    if(this.firstLoad === undefined) this.firstLoad = true
+    else if(this.firstLoad) this.firstLoad = false
   }
 
   /**
    * teardown as the current page
    */
   async teardownAsCurrent(){
-    const routeEvents = await this.getRouteEvents()
-
-    if(routeEvents){
-      if(routeEvents.teardown) routeEvents.teardown(this)
-    }
-
     if(this.file){
       wcrouter.currentFile = this._previousCurrentFile
       this._previousCurrentFile = undefined
@@ -118,16 +112,6 @@ export default class WCRoute extends HTMLElement{
    */
   get liveReload(){
     return this.router.hasAttribute("live-reload")||this.hasAttribute("live-reload")
-  }
-
-  /**
-   * returns object containing the events that are to happen
-   */
-  async getRouteEvents(){
-    if(this.hasAttribute("events-loc")){
-      const href = (new URL(this.getAttribute("events-loc"), wcrouter.currentFile)).href
-      return await import(href)
-    }
   }
 
   /**

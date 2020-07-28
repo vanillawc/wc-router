@@ -3,14 +3,19 @@ import RA from "./r-a.js"
 import WCRouter from "./wc-router.js"
 import WCRoute from "./wc-route.js"
 
-window.wcrouter = {
-  WCRoute,
-  WCRouter,
-  RA,
+class RouterTools extends EventTarget{
+  constructor(){
+    super()
+    // here for easy access by users
+    this.WCRoute = WCRoute
+    this.WCRouter = WCRouter
+    this.RA = RA
+  }
   /** the topmost router*/
   get mainrouter(){
     return document.getElementsByTagName("wc-router")[0]
-  },
+  }
+
   get basePath(){
     const WCRouterOptions = document
                               .getElementsByTagName("wc-router-options")[0]
@@ -22,11 +27,11 @@ window.wcrouter = {
     }
 
     return ""
-  },
+  }
 
-  get baseURL(){return location.origin + this.basePath},
-  currentFile: location.origin,
-
+  get baseURL(){
+    return location.origin + this.basePath
+  }
 
   /**
    * set the correct wcroute to current
@@ -34,12 +39,20 @@ window.wcrouter = {
    * @param {string} path - the path to set
    */
   route(path) {
+    const lastRoute = this.currentRoute;
     if(path.endsWith("/")) path = path.substring(0, path.length - 1)
     if(path === "") path = "/"
 
     this.setMatchingWCRoute(path)
     this.routeHistory(path)
-  },
+
+    const currentRoute = this.currentRoute;
+    this.dispatchEvent(new CustomEvent("routeChange", {detail: {lastRoute, currentRoute}}))
+
+    if(this.currentRoute.firstLoad)
+      this.dispatchEvent(new CustomEvent("routeLoad", {detail: {lastRoute, currentRoute}}))
+
+  }
 
   setMatchingWCRoute(path){
     const routeStuff = this.getMatchingRoute(path)
@@ -50,7 +63,7 @@ window.wcrouter = {
     } else{
       throw Error(`wcroute - no route matching path '${path}'`)
     }
-  },
+  }
 
   getMatchingRoute(path){
     for (const wcroute of document.getElementsByTagName("wc-route")) {
@@ -59,7 +72,7 @@ window.wcrouter = {
         return {wcroute, matchDetails: matches}
       }
     }
-  },
+  }
 
   routeHistory(path){ 
     if(window.history) {
@@ -67,13 +80,14 @@ window.wcrouter = {
         return
       else history.pushState({}, "", path)
     }
-  },
+  }
 
   get currentRoute(){
     return document.querySelector("wc-route[current]")
   }
 }
 
+window.wcrouter = new RouterTools()
 
 window.addEventListener('DOMContentLoaded', () => {
   wcrouter.route(location.pathname)
