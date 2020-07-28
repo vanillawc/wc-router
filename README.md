@@ -1,8 +1,8 @@
 wc-router
 --------
-
 go up, go down, now turn left, nope its not there
 
+![wc router logo]("logo.svg")
 
 ## Installation
 
@@ -43,7 +43,7 @@ script tags:
 
 - if a route part starts with **":"**, for example in **"/:variable/page4"**, here, the link may contain any variable in its place (for example, "/alex/page4", "/jeremy/page4", "/clarkson/page4") , and the link will redirect to this location, also note, all variables are accessable via **window.wcrouter.params** in javascript
 - if a route part starts with **"path:"**, for example in **"/abc/path:all"** or **"/path:all"**, any route at and after this path (for example, with "/abc/path:all", "/abc/def", "/abc/ghi" ...) will redirect to this page, again, all there variables/paths are visible in **window.wcrouter.params**
-- evaluation of wc-routes happens in order of appearance 
+- evaluation of wc-routes happens in order of appearance
 
 
 ### Linking
@@ -64,15 +64,15 @@ these events are accessable via the window wcrouter variable
 
 i.e. `window.wcrouter.addEventListener(<event-name>, <callback>)`
 
-- **routeLoad**: 
+- **routeLoad**:
   - **when :** called the first time a route is loaded
-  - **callback parameters:** 
+  - **callback parameters:**
     + **event.detail.lastRoute**: the previous route
     + **event.detail.currentRoute**: the current route)
 
-- **routeChange**: 
+- **routeChange**:
   - **when :** called every time a route change
-  - **callback parameters:** 
+  - **callback parameters:**
     + **event.detail.lastRoute**: the previous route
     + **event.detail.currentRoute**: the current route)
 

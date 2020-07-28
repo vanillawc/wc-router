@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.0 (1.0+r73+1)"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 48.927498 43.922535"
+   height="43.922535mm"
+   width="48.927498mm">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="27"
+     inkscape:window-x="72"
+     inkscape:window-height="1016"
+     inkscape:window-width="1848"
+     fit-margin-bottom="0"
+     fit-margin-right="0"
+     fit-margin-left="0"
+     fit-margin-top="0"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="115.54987"
+     inkscape:cx="162.7152"
+     inkscape:zoom="2.5918638"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-75.722293,-128.8502)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <rect
+       ry="9.2193422"
+       y="128.8502"
+       x="85.350204"
+       height="39.299587"
+       width="39.299587"
+       id="rect839"
+       style="opacity:1;fill:#ffcc00;stroke-width:0.264999;stroke-linecap:square;paint-order:fill markers stroke" />
+    <circle
+       r="16.660606"
+       cy="148.5"
+       cx="105"
+       id="path843"
+       style="opacity:1;fill:#501616;stroke-width:0.264999;stroke-linecap:square;paint-order:fill markers stroke" />
+    <text
+       id="text847"
+       y="136.47664"
+       x="100.83025"
+       style="font-size:3.88056px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';letter-spacing:0px;word-spacing:0px;fill:#ff0000;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="font-size:3.88056px;fill:#ff0000;stroke-width:0.264583"
+         y="136.47664"
+         x="100.83025"
+         id="tspan845"
+         sodipodi:role="line">html</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.88056px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';letter-spacing:0px;word-spacing:0px;fill:#00ffff;stroke-width:0.264583"
+       x="113.22986"
+       y="149.50418"
+       id="text847-3"><tspan
+         sodipodi:role="line"
+         id="tspan845-6"
+         x="113.22986"
+         y="149.50418"
+         style="font-size:3.88056px;fill:#00ffff;stroke-width:0.264583">html</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.88056px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';letter-spacing:0px;word-spacing:0px;fill:#ffffff;stroke-width:0.264583"
+       x="102.20105"
+       y="162.96793"
+       id="text847-7"><tspan
+         sodipodi:role="line"
+         id="tspan845-5"
+         x="102.20105"
+         y="162.96793"
+         style="font-size:3.88056px;fill:#ffffff;stroke-width:0.264583">html</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.88056px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';letter-spacing:0px;word-spacing:0px;fill:#008000;stroke-width:0.264583"
+       x="89.280083"
+       y="149.5531"
+       id="text847-35"><tspan
+         sodipodi:role="line"
+         id="tspan845-62"
+         x="89.280083"
+         y="149.5531"
+         style="font-size:3.88056px;fill:#008000;stroke-width:0.264583">html</tspan></text>
+    <path
+       sodipodi:nodetypes="cccc"
+       id="path883"
+       d="m 75.722293,154.60752 6.824835,18.16522 28.467902,-23.7044 z"
+       style="fill:#008000;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  </g>
+</svg>
