@@ -21,7 +21,6 @@ export default class WCRoute extends HTMLElement{
 
 
     if(this.eager) this.getContent();
-    this._previousCurrentFile = undefined;
   }
 
   static get observedAttributes() {
@@ -31,7 +30,6 @@ export default class WCRoute extends HTMLElement{
   attributeChangedCallback(name, oldValue, newValue){
     if(name === "current"){
       if(typeof newValue === "string") this.setupAsCurrent()
-      else this.teardownAsCurrent()
     }
   }
 
@@ -48,24 +46,8 @@ export default class WCRoute extends HTMLElement{
    */
   async setupAsCurrent(){
     await this.getContent()
-
-    if(this.file){
-      this._previousCurrentFile = wcrouter.currentFile
-      const url = (new URL(this.file, location.href)).href
-      wcrouter.currentFile = url
-    }
   }
 
-  /**
-   * teardown as the current page
-   */
-  async teardownAsCurrent(){
-    if(this.file){
-      wcrouter.currentFile = this._previousCurrentFile
-      this._previousCurrentFile = undefined
-    }
-  }
-  
   /**
    * gets the file url of the wc-route element
    */
