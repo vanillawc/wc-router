@@ -6,7 +6,7 @@ const path = require('path');
 let browser, page, server;
 
 before(async function(){
-  this.timeout(4000)
+  this.timeout(10000)
   // start server
   const app = express();
   const testHTMLPath = path.join(__dirname, '../test.html')
@@ -16,11 +16,13 @@ before(async function(){
   app.use((req, res) => {
     res.status(404).sendFile(testHTMLPath)
   })
-  server = app.listen(3000);
+  const port = 42414
+  server = app.listen(port);
 
   // start puppeteer
   browser = await puppeteer.launch()
   page = await browser.newPage()
+  await page.goto(`http://localhost:${port}/`)
   await new Promise(res => setTimeout(res, 500))
 });
 
@@ -33,7 +35,6 @@ describe('all tests', function () {
   this.timeout(1500) 
   describe('all tests', async function () {
     it('matches a 1 level absolute path correctly', async function () {
-      await page.goto('http://localhost:3000/')
       const routepath = "/one-level"
       const getRouteFn = routepath => (window
                                          .wcrouter
