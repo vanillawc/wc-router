@@ -6,6 +6,7 @@ const path = require('path');
 let browser, page, server;
 
 before(async function(){
+  this.timeout(4000)
   // start server
   const app = express();
   const testHTMLPath = path.join(__dirname, '../test.html')
@@ -13,14 +14,14 @@ before(async function(){
   app.use('/test', express.static('../test'))
   app.use('/src', express.static('../src'))
   app.use((req, res) => {
-    res.status(400)
-    res.render(testHTMLPath)
+    res.status(404).sendFile(testHTMLPath)
   })
   server = app.listen(3000);
 
   // start puppeteer
   browser = await puppeteer.launch()
   page = await browser.newPage()
+  await new Promise(res => setTimeout(res, 500))
 });
 
 after(async () => {
@@ -30,7 +31,7 @@ after(async () => {
 
 describe('all tests', function () {
   this.timeout(1500) 
-  describe('path matching', async function () {
+  describe('all tests', async function () {
     it('matches a 1 level absolute path correctly', async function () {
       await page.goto('http://localhost:3000/')
       const routepath = "/one-level"
@@ -121,19 +122,15 @@ describe('all tests', function () {
       assert.ok(wcrouteInner.includes("this is the catch-all page"))
       assert.deepStrictEqual(params.value, ['some', 'non', 'existant', 'route'])
     })
-  });
 
-  describe("test non-lazy-loading", async () => {
-    it("tests lazy loading of a page", async () => {
+    it("tests non-lazy loading of a page", async () => {
       await page.click('r-a[href="/one-level/two-level/3/4/5/6"]')
       await new Promise(res => setTimeout(res, 50))
       const innerHTML = (await page.evaluate(() => document.body.innerHTML))
       assert.ok(innerHTML.includes("this is a 6-level page"))
       await page.goBack()
     })
-  })
 
-  describe("test lazy-loading", async () => {
     it("tests lazy loading of a page", async () => {
       await page.click('r-a[href="/somewhere"]')
       await new Promise(res => setTimeout(res, 500))
@@ -141,30 +138,55 @@ describe('all tests', function () {
       assert.ok(innerHTML.includes("some page with a variable at the top level"))
       await page.goBack()
     })
-  })
 
-  describe("test route load event dispatch", async () => {
-    it("check page load event dispatch", async () => { 
-      const waitRouteChange = () => {
-        return new Promise(res => window.wcrouter.addEventListener("routeLoad",e => res(e.detail)))
+    it("check page load and event dispatch/firstLoad variable/contentLoaded variable", 
+      async () => { 
+      const waitRouteLoad = () => {
+        const wcrouter = window.wcrouter
+        const routeLoad = new Promise(res => wcrouter
+                                              .addEventListener("routeLoad",
+                                                                e => res(e.detail)))
+        const routeLoadContentLoaded = new Promise(res => wcrouter
+                                                            .addEventListener(
+                                                                "routeLoadContentLoaded",
+                                                                e => res(e.detail)))
+
+        const wcroute = document.querySelector("wc-route[path='/test-load-route']")
+        const load = new Promise(res => wcroute.addEventListener("load", res))
+        const loadCL = new Promise(res => wcroute.addEventListener("loadContentLoaded", res))
+
+        return Promise.all([routeLoad, routeLoadContentLoaded, load, loadCL])
       }
-      await Promise.all([page.click('r-a[href="/test-load-route"]'), 
-                        page.evaluate(waitRouteChange)])
+
+      const detail = (await Promise.all([page.click('r-a[href="/test-load-route"]'), 
+                                         page.evaluate(waitRouteLoad)]))[1][1]
+      assert.ok(detail.currentRoute.firstLoad) 
+      assert.ok(detail.currentRoute.contentLoaded)
       await page.goBack()
     })
 
     it("check page change event dispatch and firstLoad Variable", async () => {
       page.click('r-a[href="/test-load-route"]')
       const getFirstLoad = () => {
-        return new Promise(res => window
-                            .wcrouter
-                            .addEventListener("routeChange", e => res(e.detail)))
+        const routeChange = new Promise(res => window
+                                              .wcrouter
+                                              .addEventListener("routeChange",
+                                                                e => res(e.detail)))
+        const routeChangeContentLoaded = new Promise(res => window
+                                              .wcrouter
+                                              .addEventListener("routeChangeContentLoaded",
+                                                                e => res(e.detail)))
+
+        const wcroute = document.querySelector("wc-route[path='/test-load-route']")
+        const _switch = new Promise(res => wcroute.addEventListener("shown", res))
+        const switchCL = new Promise(res => wcroute.addEventListener("shownContentLoaded", res))
+        return Promise.all([routeChange, routeChangeContentLoaded, _switch, switchCL])
       };
-      const firstLoad = (await page.evaluate(getFirstLoad)).currentRoute.firstLoad
+      const firstLoad = (await page.evaluate(getFirstLoad))[0].currentRoute.firstLoad
       assert.ok(!firstLoad)
       await page.goBack()
     })
-  })
-
+  });
 });
+
 

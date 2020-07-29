@@ -58,7 +58,7 @@ script tags:
 
 - to reroute via javascript use, **"wcrouter.route(url)"**
 
-### events
+### wcrouter events
 
 these events are accessable via the window wcrouter variable
 
@@ -66,15 +66,65 @@ i.e. `window.wcrouter.addEventListener(<event-name>, <callback>)`
 
 - **routeLoad**:
   - **when :** called the first time a route is loaded
+  - **usage :** heavy pre content loading operations
   - **callback parameters:**
-    + **event.detail.lastRoute**: the previous route
-    + **event.detail.currentRoute**: the current route)
+    + **event.detail.currentRoute**: the current route
 
 - **routeChange**:
   - **when :** called every time a route change
+  - **usage :** heavy pre content loading operations
   - **callback parameters:**
-    + **event.detail.lastRoute**: the previous route
-    + **event.detail.currentRoute**: the current route)
+    + **event.detail.currentRoute**: the current route
+
+- **routeLoadContentLoaded**:
+  - **when :** called the first time a route is loaded, and its content is loaded
+  - **callback parameters:**
+    + **event.detail.currentRoute**: the current route
+
+- **routeChangeContentLoaded**:
+  - **when :** called every time a route change occurs, and the routes content is loaded
+  - **callback parameters:**
+    + **event.detail.currentRoute**: the current route
+
+### wc-route events
+
+these events occur in every `<wc-route>` object
+
+i.e. something like 
+
+```html
+document.querySelector("wc-route[path='/some/path']").addEventListener(event, callback)
+```
+
+- **load**:
+  - **when :** called the first time a route is loaded
+  - **usage :** heavy pre content loading operations
+  - **callback parameters:**
+    + **event.detail.wcroute**: this route
+
+- **loadContentLoaded**:
+  - **when :** called the first time a route is loaded
+  - **usage :** dom operations
+  - **callback parameters:**
+    + **event.detail.wcroute**: this route
+
+- **shown**:
+  - **when :** called every time a route is loaded
+  - **usage :** heavy pre content loading operations
+  - **callback parameters:**
+    + **event.detail.wcroute**: this route
+
+- **shownContentLoaded**:
+  - **when :** called every a route is loaded
+  - **usage :** dom operations
+  - **callback parameters:**
+    + **event.detail.wcroute**: this route
+
+- **hidden**:
+  - **when :** called every a route is hidden
+  - **usage :** dom operations
+  - **callback parameters:**
+    + **event.detail.wcroute**: this route
 
 ## Attributes
 

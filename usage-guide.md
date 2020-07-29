@@ -85,7 +85,7 @@ your final html should look like
 
 - new concept: all variables in navigation bar are accessable via `wcrouter.params`, through the window wcrouter variable, so we'll have to dynamically use these
 
-- new concept : every time a page changes, the page calls the event `routeChange` in the `wcrouter` window variable, the event handler is passed the currentRoute via `e.detail.currentRoute`
+- new concept : every time a page changes, the page calls the event `routeChangeContentLoaded` in the `wcrouter` window variable, the event handler is passed the currentRoute via `e.detail.currentRoute`
 
 using these concepts we can change the code to
 ```html
@@ -94,7 +94,7 @@ using these concepts we can change the code to
     <title>simple wc-router tutorial</title>
     <script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2/src/index.js"></script>
     <script type="module">
-      wcrouter.addEventListener("routeChange", e => {
+      wcrouter.addEventListener("routeChangeContentLoaded", e => {
         if(e.detail.currentRoute.path === "/howdy/:name"){
           e.detail.currentRoute.innerHTML = `howdy ${wcrouter.params.name} !`
         }
@@ -127,7 +127,7 @@ like,
     <title>simple wc-router tutorial</title>
     <script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2/src/index.js"></script>
     <script type="module">
-      wcrouter.addEventListener("routeChange", e => {
+      wcrouter.addEventListener("routeChangeContentLoaded", e => {
         if(e.detail.currentRoute.path === "/howdy/:name"){
           e.detail.currentRoute.innerHTML = `howdy ${wcrouter.params.name} !`
         }
@@ -157,6 +157,10 @@ you often might need to use more html in routes, you may load them into the `<wc
 
 - you'd have noticed we've used `r-a` tags to navigate here instead of `a` tags, these use the internal `history` api to navigate between pages, while `a` tags would also work, navigation via `r-a` tags should be smoother
 
-## routeChange vs routeLoad
+## routeChange vs routeChangeContentLoaded
 
-wcrouter have 2 events `routeChange` (displayed above) and `routeLoad`, `routeChange` is called every time a route is loaded, `routeLoad` is only called the first time a page is loaded, meaning that if the user (without reloading the page or during navigation) goes to another page and comes back to the same page, `routeLoad` will not be called when he comes back, it'll only be called the first time he visits the page, `routeChange` will be called every time the user visits the page
+routeChange is called before the dom content is loaded, routeChangeContentLoaded is called after the dom content is loaded
+
+## routeChangeContentLoaded vs routeLoadContentLoaded
+
+wcrouter 2 events `routeChangeContentLoaded` (displayed above) and `routeLoadContentLoaded`, `routeChangeContentLoaded` is called every time a route is loaded, `routeLoadContentLoaded` is only called the first time a page is loaded, meaning that if the user (without reloading the page or during navigation) goes to another page and comes back to the same page, `routeLoadContentLoaded` will not be called when he comes back, it'll only be called the first time he visits the page, `routeChangeContentLoaded` will be called every time the user visits the page

@@ -45,26 +45,19 @@ class RouterTools extends EventTarget{
 
     this.setMatchingWCRoute(path)
     this.routeHistory(path)
-
-    const currentRoute = this.currentRoute;
-    this.dispatchEvent(new CustomEvent("routeChange", {detail: {lastRoute, currentRoute}}))
-
-    if(this.currentRoute.firstLoad === undefined){
-      this.currentRoute.firstLoad = true
-      this.dispatchEvent(new CustomEvent("routeLoad", {detail: {lastRoute, currentRoute}}))
-    }
-
-    else if(this.currentRoute.firstLoad){
-      this.currentRoute.firstLoad = false
-    }
-
   }
 
   setMatchingWCRoute(path){
     const routeStuff = this.getMatchingRoute(path)
     if(routeStuff){
+      // firstLoad would be undefined as it has not loaded yet !
+      const firstLoad = (routeStuff.wcroute.firstLoad === undefined);
+
       if(this.currentRoute) this.currentRoute.removeAttribute("current")
       routeStuff.wcroute.setAttribute("current", "")
+
+      this._dispatchRouteChangeEvents(routeStuff.wcroute, firstLoad)
+      this._setDispatchPostLoadRouteChangeEvents(routeStuff.wcroute, firstLoad)
       wcrouter.params = routeStuff.matchDetails.params
     } else{
       throw Error(`wcroute - no route matching path '${path}'`)
@@ -78,6 +71,26 @@ class RouterTools extends EventTarget{
         return {wcroute, matchDetails: matches}
       }
     }
+  }
+
+  _dispatchRouteChangeEvents(route, firstLoad){
+    this.dispatchEvent(new CustomEvent("routeChange", {detail: {currentRoute:route}}))
+    
+    if(firstLoad){
+      this.dispatchEvent(new CustomEvent("routeLoad", {detail: {currentRoute:route}}))
+    }
+  }
+
+  _setDispatchPostLoadRouteChangeEvents(currentRoute, firstLoad){
+    if(firstLoad){
+      currentRoute.addEventListener("loadContentLoaded", () => {
+        this.dispatchEvent(new CustomEvent("routeLoadContentLoaded", {detail: {currentRoute}}))
+      })
+    }
+
+    currentRoute.addEventListener("shownContentLoaded", () => {
+      this.dispatchEvent(new CustomEvent("routeChangeContentLoaded", {detail: {currentRoute}}))
+    })
   }
 
   routeHistory(path){ 

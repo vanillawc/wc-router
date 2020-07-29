@@ -9,8 +9,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "consolidate": "^0.15.1",
     "express": "^4.17.1",
     "mocha": "^8.0.1",
+    "mustache": "^4.0.1",
     "puppeteer": "^5.2.1",
     "serve-index": "^1.9.1"
   }

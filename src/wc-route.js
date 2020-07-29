@@ -30,6 +30,7 @@ export default class WCRoute extends HTMLElement{
   attributeChangedCallback(name, oldValue, newValue){
     if(name === "current"){
       if(typeof newValue === "string") this.setupAsCurrent()
+      else this.teardownAsCurrent()
     }
   }
 
@@ -41,11 +42,34 @@ export default class WCRoute extends HTMLElement{
     return (new URL(location.href, this.fullpath)).href
   }
 
-  /**
-   * setup as the current page
-   */
   async setupAsCurrent(){
+    this.setFirstLoadVar()
+    this._dispatchPreContentLoadedEvents()
     await this.getContent()
+    this._dispatchPostContentLoadedEvents()
+  }
+
+  async teardownAsCurrent(){
+    this.dispatchEvent(new CustomEvent("hidden", {detail: {wcroute:this}}))
+  }
+
+  _dispatchPreContentLoadedEvents(){
+    if(this.firstLoad) 
+      this.dispatchEvent(new CustomEvent("load", {detail:{wcroute:this}}));
+
+    this.dispatchEvent(new CustomEvent("shown", {detail:{wcroute:this}}))
+  }
+
+  _dispatchPostContentLoadedEvents(){
+    if(this.firstLoad) 
+      this.dispatchEvent(new CustomEvent("loadContentLoaded", {detail:{wcroute:this}}));
+
+    this.dispatchEvent(new CustomEvent("shownContentLoaded", {detail:{wcroute:this}}))
+  }
+
+  setFirstLoadVar(){
+    if(this.firstLoad === undefined) this.firstLoad = true;
+    else if(this.firstLoad) this.firstLoad = false
   }
 
   /**
@@ -87,7 +111,7 @@ export default class WCRoute extends HTMLElement{
   }
 
   /**
-   *
+   * should the content be fetched every time the page loads
    */
   get liveReload(){
     return this.router.hasAttribute("live-reload")||this.hasAttribute("live-reload")
