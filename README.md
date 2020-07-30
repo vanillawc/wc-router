@@ -1,8 +1,8 @@
+![wc router logo](logo.svg)
+
 wc-router
 --------
 go up, go down, now turn left, nope its not there
-
-![wc router logo](logo.svg)
 
 ## Installation
 
@@ -115,13 +115,13 @@ document.querySelector("wc-route[path='/some/path']").addEventListener(event, ca
     + **event.detail.wcroute**: this route
 
 - **shownContentLoaded**:
-  - **when :** called every a route is loaded
+  - **when :** called every time a route is loaded
   - **usage :** dom operations
   - **callback parameters:**
     + **event.detail.wcroute**: this route
 
 - **hidden**:
-  - **when :** called every a route is hidden
+  - **when :** called every time a route is hidden
   - **usage :** dom operations
   - **callback parameters:**
     + **event.detail.wcroute**: this route
