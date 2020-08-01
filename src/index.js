@@ -1,5 +1,6 @@
 import chahiye from "https://cdn.jsdelivr.net/gh/therealadityashankar/chahiye@0.5.0/chahiye.js"
 import RA from "./r-a.js"
+import "./wc-router-options.js"
 import WCRouter from "./wc-router.js"
 import WCRoute from "./wc-route.js"
 
@@ -11,6 +12,7 @@ class RouterTools extends EventTarget{
     this.WCRouter = WCRouter
     this.RA = RA
   }
+
   /** the topmost router*/
   get mainrouter(){
     return document.getElementsByTagName("wc-router")[0]

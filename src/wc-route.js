@@ -45,7 +45,9 @@ export default class WCRoute extends HTMLElement{
   async setupAsCurrent(){
     this.setFirstLoadVar()
     this._dispatchPreContentLoadedEvents()
+    this._setStyleDisplayHidden()
     await this.getContent()
+    this._removeStyleDisplayHidden()
     this._dispatchPostContentLoadedEvents()
   }
 
@@ -185,6 +187,14 @@ export default class WCRoute extends HTMLElement{
     }
 
     return {matches:true, params}
+  }
+
+  _setStyleDisplayHidden(){
+    this.style.display = "none"
+  }
+
+  _removeStyleDisplayHidden(){
+    this.style.display = ""
   }
 }
 
