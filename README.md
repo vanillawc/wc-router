@@ -18,7 +18,7 @@ script tags:
 
 ### Tags here
 
-- `<wc-router-options>`
+- `<wc-route-base>`
 - `<wc-router>`
 - `<wc-route>`
 - `<r-a>`
@@ -35,6 +35,14 @@ script tags:
   <wc-route path="/" file="/pages/page1.html"></wc-route>
   <wc-route path="/page2" file="/pages/page2.html"></wc-route>
   <wc-route path="/page3" file="/pages/page3.html" eager></wc-route>
+  <!--
+    <wc-route-base> tags contain common html, the html inside these tags
+    is loaded first, then if the <wc-route-base> tags contain a <wc-route-insert> tag, this tag is replaced with the contents of the <wc-route> tag
+  -->
+  <wc-route-base file="/pages/cats/base.html">
+    <wc-route path="/cat/albert.html" file="/pages/cats/albert.html"></wc-route>
+    <wc-route path="/cat/betty.html" file="/pages/cats/betty.html"></wc-route>
+  </wc-route-base>
   <wc-route path="/:variable/page4" file="/pages/page3.html" eager></wc-route>
   <wc-route path="/abc/path:all" file="/pages/catch-all.html"></wc-route>
   <wc-route path="/path:all" file="/pages/catch-all.html"></wc-route>
