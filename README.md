@@ -37,7 +37,7 @@ script tags:
   <wc-route path="/page3" file="/pages/page3.html" eager></wc-route>
   <!--
     <wc-route-base> tags contain common html, the html inside these tags
-    is loaded first, then if the <wc-route-base> tags contain a <wc-route-insert> tag, this tag is replaced with the contents of the <wc-route> tag
+    is loaded first, then if the <wc-route-base> tags html contains a <wc-route-insert> tag, this tag is replaced with the contents of the <wc-route> tag, and then the route is rendered
   -->
   <wc-route-base file="/pages/cats/base.html">
     <wc-route path="/cat/albert.html" file="/pages/cats/albert.html"></wc-route>
