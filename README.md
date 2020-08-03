@@ -42,8 +42,8 @@ script tags:
     <wc-route> tag, and then the route is rendered and shown
   -->
   <wc-route-base file="/pages/cats/base.html">
-    <wc-route path="/cat/albert.html" file="/pages/cats/albert.html"></wc-route>
-    <wc-route path="/cat/betty.html" file="/pages/cats/betty.html"></wc-route>
+    <wc-route path="/cat/albert" file="/pages/cats/albert.html"></wc-route>
+    <wc-route path="/cat/betty" file="/pages/cats/betty.html"></wc-route>
   </wc-route-base>
   <wc-route path="/:variable/page4" file="/pages/page3.html" eager></wc-route>
   <wc-route path="/abc/path:all" file="/pages/catch-all.html"></wc-route>
