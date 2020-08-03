@@ -1,3 +1,6 @@
+import WCRouteBase from "./wc-route-base.js"
+import WCRouter from "./wc-router.js"
+
 /**
  * the wc-route element
  *
@@ -18,9 +21,6 @@ export default class WCRoute extends HTMLElement{
     this.firstLoad = undefined;
     this.contentLoaded = false
     if(!this.hasAttribute("file")) this.contentLoaded = true
-
-
-    if(this.eager) this.getContent();
   }
 
   static get observedAttributes() {
@@ -35,7 +35,7 @@ export default class WCRoute extends HTMLElement{
   }
 
   get fullPath(){
-    return wcrouter.basePath + "/" + this.path.substring(1)
+    return "/" + this.path.substring(1)
   }
 
   get url(){
@@ -95,28 +95,36 @@ export default class WCRoute extends HTMLElement{
    * read-only, is the wc-route eager loaded ?
    */
   get eager(){
-    return this.router.hasAttribute("eager")||this.hasAttribute("eager")
+    return wcrouter.mainrouter.hasAttribute("eager")||this.hasAttribute("eager")
   }
 
   /**
-   * read-only, the parent router of the wc-route element
+   * get all the routes the current wc-route is inside,
+   *
+   * this goes in the order, nearest base -> furthest base
    */
-  get router(){
-    return this.parentNode
+  get bases(){
+    const bases = []
+    let el = this
+
+    while (el.parentNode instanceof WCRouteBase){
+      bases.push(el.parentNode)
+      el = el.parentNode
+    }
+
+    return bases
   }
 
   /**
    * read-only, is this the current page ?
    */
-  get current(){
-    return this.hasAttribute("current")
-  }
+  get current(){ return this.hasAttribute("current") }
 
   /**
    * should the content be fetched every time the page loads
    */
   get liveReload(){
-    return this.router.hasAttribute("live-reload")||this.hasAttribute("live-reload")
+    return wcrouter.mainrouter.hasAttribute("live-reload")||this.hasAttribute("live-reload")
   }
 
   /**
@@ -129,14 +137,32 @@ export default class WCRoute extends HTMLElement{
       if(this.contentLoaded) return this.innerHTML
     }
 
-    if(!this.file) return this.innerHTML
+    const thisHasNoBases = this.bases.length === 0
+
+    if((!this.file) && thisHasNoBases) return this.innerHTML
 
     this.innerHTML = "loading content..."
+
+    let fullInnerHTML = ""
+
     const url = (new URL(this.file, location.href)).href
     const resp = await fetch(url);
-    const text = await resp.text()
+    const respText = await resp.text()
 
-    this.innerHTML = text;
+    if(thisHasNoBases){
+      fullInnerHTML += respText
+    } else {
+      const bases = this.bases
+      let currHTML = respText
+
+      for(const base of bases){
+        currHTML = await base.insert(currHTML)
+      }
+
+      fullInnerHTML += currHTML
+    }
+
+    this.innerHTML = fullInnerHTML;
     this.contentLoaded = true
     return this.innerHTML;
   }
@@ -149,7 +175,7 @@ export default class WCRoute extends HTMLElement{
    * @returns {object} - {matches : bool, params : obj}, params contains the params that are present in the path
    */
   matches(path){
-    path = (new URL(path, wcrouter.baseURL)).pathname
+    path = (new URL(path, location.origin)).pathname
     const fullPath = this.fullPath
     const params = {}
     const thisFullPathSplit = fullPath.split("/")

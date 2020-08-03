@@ -127,8 +127,11 @@ describe('all tests', function () {
     it("tests non-lazy loading of a page", async () => {
       await page.click('r-a[href="/one-level/two-level/3/4/5/6"]')
       await new Promise(res => setTimeout(res, 50))
-      const innerHTML = (await page.evaluate(() => document.body.innerHTML))
-      assert.ok(innerHTML.includes("this is a 6-level page"))
+      const checkHasAttribute = () => {
+        return window.wcrouter.getMatchingRoute("/one-level/two-level/3/4/5/6").wcroute.hasAttribute("current")
+      }
+      const hasAttribute = (await page.evaluate(checkHasAttribute))
+      assert.ok(hasAttribute)
       await page.goBack()
     })
 
@@ -166,7 +169,7 @@ describe('all tests', function () {
       await page.goBack()
     })
 
-    it("check page change event dispatch and firstLoad Variable", async () => {
+    it("check page change event dispatch, hidden event dispatch and firstLoad Variable", async () => {
       page.click('r-a[href="/test-load-route"]')
       const getFirstLoad = () => {
         const routeChange = new Promise(res => window
@@ -179,12 +182,43 @@ describe('all tests', function () {
                                                                 e => res(e.detail)))
 
         const wcroute = document.querySelector("wc-route[path='/test-load-route']")
+        const mainWcroute = document.querySelector("wc-route[path='/']")
         const _switch = new Promise(res => wcroute.addEventListener("shown", res))
         const switchCL = new Promise(res => wcroute.addEventListener("shownContentLoaded", res))
-        return Promise.all([routeChange, routeChangeContentLoaded, _switch, switchCL])
+        const mainHidden = new Promise(res => mainWcroute.addEventListener("hidden", res))
+        return Promise.all([routeChange, 
+                            routeChangeContentLoaded, 
+                            _switch, 
+                            switchCL, 
+                            mainHidden])
       };
       const firstLoad = (await page.evaluate(getFirstLoad))[0].currentRoute.firstLoad
       assert.ok(!firstLoad)
+      await page.goBack()
+    })
+
+    it("test wc-route-base insert function", async () => {
+      const base1Insert = () => {
+        const el = document.getElementById("base1")
+        return el.insert("<p>nanananana</p>")
+      }
+
+      const text = await page.evaluate(base1Insert)
+
+      assert.strictEqual(text, `<p>this is a route base</p>
+<p>nanananana</p>
+`)
+    })
+
+    it("tests loading a page with a base", async () => {
+      const checkroutecontents = async () => {
+        window.wcrouter.route("/route/with/base")
+        await new Promise(res => setTimeout(res, 1000))
+        const route = document.querySelector('wc-route[path="/route/with/base"]')
+        return route.innerHTML
+      }
+      const innerHTML = (await page.evaluate(checkroutecontents))
+      assert.strictEqual(innerHTML, "<p>this is a route base</p>\n<p>this is the route content inside the base</p>\n")
       await page.goBack()
     })
   });

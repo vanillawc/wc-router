@@ -1,6 +1,5 @@
 import chahiye from "https://cdn.jsdelivr.net/gh/therealadityashankar/chahiye@0.5.0/chahiye.js"
 import RA from "./r-a.js"
-import "./wc-router-options.js"
 import WCRouter from "./wc-router.js"
 import WCRoute from "./wc-route.js"
 
@@ -19,15 +18,6 @@ class RouterTools extends EventTarget{
   }
 
   get basePath(){
-    const WCRouterOptions = document
-                              .getElementsByTagName("wc-router-options")[0]
-
-    if(WCRouterOptions){
-      const path = WCRouterOptions.getAttribute("base-path")
-      if(path.startsWith("/")) return path
-      else return "/" + path
-    }
-
     return ""
   }
 
@@ -113,12 +103,18 @@ window.wcrouter = new RouterTools()
 window.addEventListener('DOMContentLoaded', () => {
   wcrouter.route(location.pathname)
   const wcroutes = [...document.getElementsByTagName("wc-route")]
+  loadEagerRoutes()
 });
 
 
 window.addEventListener("popstate", () => {
   wcrouter.route(location.pathname)
 })
+
+function loadEagerRoutes(){
+  const wcroutes = [...document.getElementsByTagName("wc-route")]
+  wcroutes.forEach(r => {if(r.eager) r.getContent()})
+}
 
 
 async function getStyleSheet(){ 
