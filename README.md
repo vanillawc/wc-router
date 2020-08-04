@@ -148,7 +148,7 @@ document.querySelector("wc-route[path='/some/path']").addEventListener(event, ca
   - parts of a route are seperated by slashes, eg: **"/asbas/asvdsad/asds"**
   - if you start a route-part with a ":" for eg: **"/asdcasdc/:param/def**, its treated as a string (and is visible from the 'wcrouter' variable in the window, in 'wc-router.params', with the word after ':' as the variable)
   - if you start a route-part with "path:", eg: **"/asadc/path:sometgin"**, note this is only possible for route-parts in the end, all further part parts will be visible in 'wc-router.params["your-var"]'
-- **live-reload**: loads the file every time the page is navigated to, instead of caching it
+- **p-title**: the to-set page title
 
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
 
