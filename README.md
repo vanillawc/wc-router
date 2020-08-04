@@ -31,22 +31,22 @@ script tags:
 ### Routing
 
 ```html
+<!--
+<wc-route-base> tags contain common html, the html inside these tags
+is loaded first, then if the <wc-route-base> tags html contains a 
+<wc-route-insert> tag, this tag is replaced with the contents of the 
+<wc-route> tag, and then the route is rendered and shown
+-->
 <wc-router>
-  <wc-route path="/" file="/pages/page1.html"></wc-route>
-  <wc-route path="/page2" file="/pages/page2.html"></wc-route>
-  <wc-route path="/page3" file="/pages/page3.html" eager></wc-route>
-  <!--
-    <wc-route-base> tags contain common html, the html inside these tags
-    is loaded first, then if the <wc-route-base> tags html contains a 
-    <wc-route-insert> tag, this tag is replaced with the contents of the 
-    <wc-route> tag, and then the route is rendered and shown
-  -->
+  <wc-route path="/" file="/pages/page1.html" p-title="page 1"></wc-route>
+  <wc-route path="/page2" file="/pages/page2.html" p-title="page 2"></wc-route>
+  <wc-route path="/page3" file="/pages/page3.html" p-title="page 3" eager></wc-route>
   <wc-route-base file="/pages/cats/base.html">
-    <wc-route path="/cat/albert" file="/pages/cats/albert.html"></wc-route>
-    <wc-route path="/cat/betty" file="/pages/cats/betty.html"></wc-route>
+    <wc-route path="/cat/albert" file="/pages/cats/albert.html" p-title="albert the cat"></wc-route>
+    <wc-route path="/cat/betty" file="/pages/cats/betty.html" p-title="betty the cat"></wc-route>
   </wc-route-base>
-  <wc-route path="/:variable/page4" file="/pages/page3.html" eager></wc-route>
-  <wc-route path="/abc/path:all" file="/pages/catch-all.html"></wc-route>
+  <wc-route path="/:variable/page4" file="/pages/page4.html" eager></wc-route>
+  <wc-route path="/abc/path:all" file="/pages/catch-all-abc.html"></wc-route>
   <wc-route path="/path:all" file="/pages/catch-all.html"></wc-route>
 </wc-router>
 ```
