@@ -108,12 +108,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 window.addEventListener("popstate", () => {
+  hideAllWCRouteBases()
   wcrouter.route(location.pathname)
 })
 
 function loadEagerRoutes(){
   const wcroutes = [...document.getElementsByTagName("wc-route")]
   wcroutes.forEach(r => {if(r.eager) r.getContent()})
+}
+
+function hideAllWCRouteBases(){
+  const routeBases = document.getElementsByTagName("wc-route-base")
+  for(const base of routeBases) base.hide()
 }
 
 

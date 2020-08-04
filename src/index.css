@@ -6,6 +6,14 @@ wc-route[current]{
     display: block;
 }
 
+wc-route-base{
+    display: none;
+}
+
+wc-route-base[current]{
+    display: block;
+}
+
 r-a, r-a[repr-type="link"]{
     color: blue;
     text-decoration: underline;

@@ -197,28 +197,39 @@ describe('all tests', function () {
       await page.goBack()
     })
 
-    it("test wc-route-base insert function", async () => {
-      const base1Insert = () => {
-        const el = document.getElementById("base1")
-        return el.insert("<p>nanananana</p>")
-      }
-
-      const text = await page.evaluate(base1Insert)
-
-      assert.strictEqual(text, `<p>this is a route base</p>
-<p>nanananana</p>
-`)
-    })
-
     it("tests loading a page with a base", async () => {
+      await page.click('r-a[href="/route/with/base"]')
       const checkroutecontents = async () => {
-        window.wcrouter.route("/route/with/base")
         await new Promise(res => setTimeout(res, 1000))
-        const route = document.querySelector('wc-route[path="/route/with/base"]')
+        const route = document.getElementById("base1")
         return route.innerHTML
       }
       const innerHTML = (await page.evaluate(checkroutecontents))
-      assert.strictEqual(innerHTML, "<p>this is a route base</p>\n<p>this is the route content inside the base</p>\n")
+      const expected = `<p>this is a route base</p>
+<r-a href="/route/with/base">route1 in this base</r-a>
+<br>
+<r-a href="/route/with/base/2">another route in this base</r-a>
+<wc-route-insert><wc-route path="/route/with/base" file="/test/test_files/base1_route1.html" current="" style=""><p>this is the route content inside the base</p>
+</wc-route><wc-route path="/route/with/base/2">another route inside a base</wc-route></wc-route-insert>`
+      assert.strictEqual(innerHTML.trim(), expected)
+      await page.goBack()
+    })
+
+    it("tests loading another page with a base", async () => {
+      await page.click('r-a[href="/route/with/base/2"]')
+      const checkroutecontents = async () => {
+        await new Promise(res => setTimeout(res, 1000))
+        const route = document.getElementById("base1")
+        return route.innerHTML
+      }
+      const innerHTML = (await page.evaluate(checkroutecontents))
+      const expected = `<p>this is a route base</p>
+<r-a href="/route/with/base">route1 in this base</r-a>
+<br>
+<r-a href="/route/with/base/2">another route in this base</r-a>
+<wc-route-insert><wc-route path="/route/with/base" file="/test/test_files/base1_route1.html" style=""><p>this is the route content inside the base</p>
+</wc-route><wc-route path="/route/with/base/2" current="" style="">another route inside a base</wc-route></wc-route-insert>`
+      assert.strictEqual(innerHTML.trim(), expected)
       await page.goBack()
     })
   });

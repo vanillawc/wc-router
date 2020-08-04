@@ -29,8 +29,8 @@ export default class WCRoute extends HTMLElement{
 
   attributeChangedCallback(name, oldValue, newValue){
     if(name === "current"){
-      if(typeof newValue === "string") this.setupAsCurrent()
-      else this.teardownAsCurrent()
+      if(typeof newValue === "string") this._setupAsCurrent()
+      else this._teardownAsCurrent()
     }
   }
 
@@ -42,17 +42,24 @@ export default class WCRoute extends HTMLElement{
     return (new URL(location.href, this.fullpath)).href
   }
 
-  async setupAsCurrent(){
-    this.setFirstLoadVar()
+  async _setupAsCurrent(){
+    this._setFirstLoadVar()
     this._dispatchPreContentLoadedEvents()
     this._setStyleDisplayHidden()
     await this.getContent()
+    await this._getContentOfBases()
+    await this._showBases()
     this._removeStyleDisplayHidden()
     this._dispatchPostContentLoadedEvents()
   }
 
-  async teardownAsCurrent(){
+  async _teardownAsCurrent(){
     this.dispatchEvent(new CustomEvent("hidden", {detail: {wcroute:this}}))
+
+    // if the teardown is called while there is another route marked as current
+    // which is inside the base
+    // we want to make sure the base does not get hidden
+    for(const base of this.bases) await base.hideIfContainsNoCurrentRoute()
   }
 
   _dispatchPreContentLoadedEvents(){
@@ -69,7 +76,7 @@ export default class WCRoute extends HTMLElement{
     this.dispatchEvent(new CustomEvent("shownContentLoaded", {detail:{wcroute:this}}))
   }
 
-  setFirstLoadVar(){
+  _setFirstLoadVar(){
     if(this.firstLoad === undefined) this.firstLoad = true;
     else if(this.firstLoad) this.firstLoad = false
   }
@@ -107,8 +114,8 @@ export default class WCRoute extends HTMLElement{
     const bases = []
     let el = this
 
-    while (el.parentNode instanceof WCRouteBase){
-      bases.push(el.parentNode)
+    while (el.parentNode !== document.body){
+      if(el.parentNode instanceof WCRouteBase) bases.push(el.parentNode)
       el = el.parentNode
     }
 
@@ -137,34 +144,27 @@ export default class WCRoute extends HTMLElement{
       if(this.contentLoaded) return this.innerHTML
     }
 
-    const thisHasNoBases = this.bases.length === 0
-
-    if((!this.file) && thisHasNoBases) return this.innerHTML
+    if(!this.file) return this.innerHTML
 
     this.innerHTML = "loading content..."
-
-    let fullInnerHTML = ""
 
     const url = (new URL(this.file, location.href)).href
     const resp = await fetch(url);
     const respText = await resp.text()
 
-    if(thisHasNoBases){
-      fullInnerHTML += respText
-    } else {
-      const bases = this.bases
-      let currHTML = respText
+    this.innerHTML = respText;
 
-      for(const base of bases){
-        currHTML = await base.insert(currHTML)
-      }
 
-      fullInnerHTML += currHTML
-    }
-
-    this.innerHTML = fullInnerHTML;
     this.contentLoaded = true
     return this.innerHTML;
+  }
+
+  async _getContentOfBases(){
+    for(const base of this.bases) await base.getContent()
+  }
+
+  async _showBases(){
+    for(const base of this.bases) await base.show()
   }
 
   /**
