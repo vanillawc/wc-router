@@ -125,7 +125,7 @@ describe('all tests', function () {
       assert.deepStrictEqual(params.value, ['some', 'non', 'existant', 'route'])
     })
 
-    it("tests non-lazy loading of a page", async () => {
+    it("tests non-lazy loading of a page and fullyActive variable", async () => {
       await page.click('r-a[href="/one-level/two-level/3/4/5/6"]')
       await new Promise(res => setTimeout(res, 50))
       const checkHasAttribute = () => {
@@ -137,7 +137,11 @@ describe('all tests', function () {
       const title = await page.title()
       assert.equal(title, "six level page")
 
+      const query = "wc-route[path='/one-level/two-level/3/4/5/6']"
+      assert.ok(await page.evaluate(q => document.querySelector(q).fullyActive, query))
+
       await page.goBack()
+      assert.ok(!await page.evaluate(q => document.querySelector(q).fullyActive, query))
     })
 
     it("tests lazy loading of a page", async () => {
@@ -181,6 +185,7 @@ describe('all tests', function () {
                                               .wcrouter
                                               .addEventListener("routeChange",
                                                                 e => res(e.detail)))
+
         const routeChangeContentLoaded = new Promise(res => window
                                               .wcrouter
                                               .addEventListener("routeChangeContentLoaded",
@@ -239,9 +244,56 @@ describe('all tests', function () {
       await page.goBack()
     })
 
+
+    it("check page base load and event dispatch/contentLoaded variable", 
+      async () => { 
+      const waitRouteLoad = () => {
+        const wcrouter = window.wcrouter
+        const wcroute = document.querySelector("wc-route[path='/route/with/nested/base/2']")
+        const base = wcroute.bases[0]
+        const load = new Promise(res => base.addEventListener("load", e => res(e.detail)))
+        const loadCL = new Promise(res => base.addEventListener("loadContentLoaded", res))
+
+        return Promise.all([load, loadCL])
+      }
+
+      const detail = (await Promise.all([page.click('r-a[href="/route/with/nested/base/2"]'), 
+                                         page.evaluate(waitRouteLoad)]))[1][0]
+      assert.ok(detail.routeBase.fullyActive) 
+      assert.ok(detail.routeBase.contentLoaded) 
+      await page.goBack()
+
+      const query = "wc-route[path='/route/with/nested/base/2']"
+      assert.ok(!await page.evaluate(q => document.querySelector(q).fullyActive, query))
+    })
+
+    it("check page base change and event dispath", 
+      async () => { 
+      const waitRouteLoad = () => {
+        const wcrouter = window.wcrouter
+        const wcroute = document.querySelector("wc-route[path='/route/with/nested/base/2']")
+        const base = wcroute.bases[0]
+        const load = new Promise(res => base.addEventListener("change", e => res(e.detail)))
+        const loadCL = new Promise(res => base.addEventListener("changeContentLoaded", res))
+
+        return Promise.all([load, loadCL])
+      }
+
+      const detail = (await Promise.all([page.click('r-a[href="/route/with/nested/base/2"]'), 
+                                         page.evaluate(waitRouteLoad)]))[1][0]
+      assert.ok(detail.routeBase.fullyActive) 
+      await page.goBack()
+
+      const query = "wc-route[path='/route/with/nested/base/2']"
+      assert.ok(!await page.evaluate(q => document.querySelector(q).fullyActive, query))
+    })
+
     it("tests loading another page with a nested base", async () => {
       await page.click('r-a[href="/route/with/nested/base"]')
-      await page.click('r-a[href="/route/with/nested/base/2"]')
+
+      // required to mention base 3 as there are multiple r-a with the same href,
+      // and query selector selects the first one
+      await page.click('#base3 r-a[href="/route/with/nested/base/2"]')
       const checkroutecontents = async () => {
         const route = document.getElementById("base3")
         return route.innerHTML
@@ -256,7 +308,7 @@ describe('all tests', function () {
           <wc-route-base current="">
             <p>the nested base</p>
             <wc-route-insert>
-              <wc-route path="/route/with/nested/base/2" current="" style="">route 2</wc-route>
+              <wc-route path="/route/with/nested/base/2" style="" current="">route 2</wc-route>
               <wc-route path="/route/with/nested/base/3">route 3</wc-route>
             </wc-route-insert>
           </wc-route-base>

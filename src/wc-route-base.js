@@ -1,8 +1,11 @@
 export default class WCRouteBase extends HTMLElement{
   constructor(){
     super()
+    this.firstLoad = undefined;
     this.contentLoaded = false
-    this.setInvisible()
+    if(!this.file) this.contentLoaded = true
+    this.fullyActive = false
+    this._setInvisible()
   }
 
   get file(){
@@ -10,17 +13,79 @@ export default class WCRouteBase extends HTMLElement{
   }
 
   async show(){
+    this._setFirstLoadVar()
+    this._dispatchPreLoadEvents()
     await this.getContent()
-    this.setVisible()
+    this._setVisible()
+    this._dispatchPostLoadEvents()
+    this.fullyActive = true
   }
 
   async hideIfContainsNoCurrentRoute(){
-    if(!this.querySelector("wc-route[current]")) this.setInvisible()
+    if(!this.querySelector("wc-route[current]")) this._setInvisible()
   }
 
   async hide(){
-    this.setInvisible()
+    this.fullyActive = false
+    this._setInvisible()
   }
+
+  _setFirstLoadVar(){
+    if(this.firstLoad === undefined) this.firstLoad = true
+    else if(this.firstLoad === true) this.firstLoad = false
+    // if its false, let it remain false
+  }
+
+  _dispatchPreLoadEvents(){
+    if(this.firstLoad){
+      const waitForLoadContent = () => {
+        const wait = res => {
+            this.addEventListener("loadContentLoaded", () => {
+              this.removeEventListener("loadContentLoaded", wait)
+              res()
+            })
+        }
+
+        return new Promise(wait)
+      }
+
+      const eventLoad = {
+        detail: {
+          routeBase: this,
+          waitForContent: waitForLoadContent
+        }
+      }
+
+      this.dispatchEvent(new CustomEvent("load", eventLoad))
+    }
+
+
+    const waitForChangeContent = () => {
+      const wait = res => {
+          this.addEventListener("changeContentLoaded", () => {
+            this.removeEventListener("changeContentLoaded", wait)
+            res()
+          })
+      }
+
+      return new Promise(wait)
+    }
+
+    const eventChange = {detail: 
+      {routeBase: this, waitForContent: waitForChangeContent}
+    }
+    this.dispatchEvent(new CustomEvent("change", eventChange))
+  }
+
+  _dispatchPostLoadEvents(){
+    if(this.firstLoad){
+      const event = {detail: {routeBase: this}}
+      this.dispatchEvent(new CustomEvent("loadContentLoaded", event))
+    }
+
+    const event = {detail: {routeBase: this}}
+    this.dispatchEvent(new CustomEvent("changeContentLoaded", event))
+   }
 
   /**
    * fetches the content and returns it
@@ -52,8 +117,14 @@ export default class WCRouteBase extends HTMLElement{
     return this.innerHTML
   }
 
-  setVisible(){this.setAttribute("current", "")}
-  setInvisible(){this.removeAttribute("current")}
+  _setVisible(){this.setAttribute("current", "")}
+  _setInvisible(){
+    this.removeAttribute("current")
+
+    if(this.firstLoad !== undefined){
+      this.dispatchEvent(new CustomEvent("hidden"))
+    }
+  }
 } 
 
 customElements.define("wc-route-base", WCRouteBase)

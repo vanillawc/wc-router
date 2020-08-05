@@ -21,6 +21,7 @@ export default class WCRoute extends HTMLElement{
     this.firstLoad = undefined;
     this.contentLoaded = false
     if(!this.hasAttribute("file")) this.contentLoaded = true
+    this.fullyActive = false
   }
 
   static get observedAttributes() {
@@ -52,9 +53,11 @@ export default class WCRoute extends HTMLElement{
     this._setTitle()
     this._removeStyleDisplayHidden()
     this._dispatchPostContentLoadedEvents()
+    this.fullyActive = true
   }
 
   async _teardownAsCurrent(){
+    this.fullyActive = false
     this.dispatchEvent(new CustomEvent("hidden", {detail: {wcroute:this}}))
 
     // if the teardown is called while there is another route marked as current
@@ -64,10 +67,37 @@ export default class WCRoute extends HTMLElement{
   }
 
   _dispatchPreContentLoadedEvents(){
-    if(this.firstLoad) 
-      this.dispatchEvent(new CustomEvent("load", {detail:{wcroute:this}}));
+    if(this.firstLoad){
+      const waitForContent = () => {
+        if(this.fullyActive) return Promise.resolve()
 
-    this.dispatchEvent(new CustomEvent("shown", {detail:{wcroute:this}}))
+        const wait = res => {
+          this.addEventListener("loadContentLoaded", () => {
+            this.removeEventListener("loadContentLoaded", wait)
+            res()
+          })
+        }
+
+        return new Promise(wait)
+      }
+
+      this.dispatchEvent(new CustomEvent("load", {detail:{wcroute:this, waitForContent}}));
+    }
+
+    const waitForContent = () => {
+      if(this.fullyActive) return Promise.resolve()
+
+      const wait = res => {
+        this.addEventListener("shownContentLoaded", () => {
+          this.removeEventListener("shownContentLoaded", wait)
+          res()
+        })
+      }
+
+      return new Promise(wait)
+    }
+
+    this.dispatchEvent(new CustomEvent("shown", {detail:{wcroute:this, waitForContent}}))
   }
 
   _dispatchPostContentLoadedEvents(){

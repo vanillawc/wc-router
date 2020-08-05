@@ -5,6 +5,7 @@
     <title>Mocha Tests</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/src/index.js" type="module" charset="utf-8"></script>
+    <script src="/test/test_files/script.js" type="module" charset="utf-8"></script>
   </head>
   <body>
     <wc-router>
@@ -24,6 +25,8 @@
           <r-a href="/route/with/another/base">another route with a different base</r-a><br>
           <r-a href="/route/with/another/base/2">another another route on the different base</r-a><br>
           <r-a href="/route/with/nested/base">a route in a nested base</r-a><br>
+          <r-a href="/route/with/nested/base/2">another route in the same nested base</r-a><br>
+          <r-a href="/route/with/nested/base/3">another (3rd) route in the same nested base</r-a><br>
           <r-a href="/non/existant/link">load catch all page</r-a><br>
       </wc-route>
       <wc-route path="/one-level" p-title="one level page">
