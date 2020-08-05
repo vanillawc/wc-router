@@ -49,6 +49,7 @@ export default class WCRoute extends HTMLElement{
     await this.getContent()
     await this._getContentOfBases()
     await this._showBases()
+    this._setTitle()
     this._removeStyleDisplayHidden()
     this._dispatchPostContentLoadedEvents()
   }
@@ -79,6 +80,10 @@ export default class WCRoute extends HTMLElement{
   _setFirstLoadVar(){
     if(this.firstLoad === undefined) this.firstLoad = true;
     else if(this.firstLoad) this.firstLoad = false
+  }
+
+  _setTitle(){
+    if(this.hasAttribute("p-title")) document.title = this.getAttribute("p-title")
   }
 
   /**

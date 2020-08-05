@@ -41,6 +41,7 @@ describe('all tests', function () {
                                          .getMatchingRoute(routepath)
                                          .wcroute.innerHTML);
       const wcrouteInner = await page.evaluate(getRouteFn, routepath)
+
       assert.ok(wcrouteInner.includes("this is a one-level page"))
     });
 
@@ -132,12 +133,16 @@ describe('all tests', function () {
       }
       const hasAttribute = (await page.evaluate(checkHasAttribute))
       assert.ok(hasAttribute)
+
+      const title = await page.title()
+      assert.equal(title, "six level page")
+
       await page.goBack()
     })
 
     it("tests lazy loading of a page", async () => {
       await page.click('r-a[href="/somewhere"]')
-      await new Promise(res => setTimeout(res, 500))
+      await new Promise(res => setTimeout(res, 100))
       const innerHTML = (await page.evaluate(() => document.body.innerHTML))
       assert.ok(innerHTML.includes("some page with a variable at the top level"))
       await page.goBack()
@@ -199,8 +204,9 @@ describe('all tests', function () {
 
     it("tests loading a page with a base", async () => {
       await page.click('r-a[href="/route/with/base"]')
+      await new Promise(res => setTimeout(res, 50))
+
       const checkroutecontents = async () => {
-        await new Promise(res => setTimeout(res, 1000))
         const route = document.getElementById("base1")
         return route.innerHTML
       }
@@ -218,7 +224,7 @@ describe('all tests', function () {
     it("tests loading another page with a base", async () => {
       await page.click('r-a[href="/route/with/base/2"]')
       const checkroutecontents = async () => {
-        await new Promise(res => setTimeout(res, 1000))
+        await new Promise(res => setTimeout(res, 50))
         const route = document.getElementById("base1")
         return route.innerHTML
       }
@@ -230,6 +236,35 @@ describe('all tests', function () {
 <wc-route-insert><wc-route path="/route/with/base" file="/test/test_files/base1_route1.html" style=""><p>this is the route content inside the base</p>
 </wc-route><wc-route path="/route/with/base/2" current="" style="">another route inside a base</wc-route></wc-route-insert>`
       assert.strictEqual(innerHTML.trim(), expected)
+      await page.goBack()
+    })
+
+    it("tests loading another page with a nested base", async () => {
+      await page.click('r-a[href="/route/with/nested/base"]')
+      await page.click('r-a[href="/route/with/nested/base/2"]')
+      const checkroutecontents = async () => {
+        const route = document.getElementById("base3")
+        return route.innerHTML
+      }
+      const innerHTML = (await page.evaluate(checkroutecontents))
+      const expected = `<p>base loaded without file parameter, in a nested base</p>
+        <r-a href="/route/with/nested/base">route 1 (in only the parent base)</r-a><br>
+        <r-a href="/route/with/nested/base/2">route 2 (in the nested base)</r-a><br>
+        <r-a href="/route/with/nested/base/3">route 3 (in the nested base)</r-a><br>
+        <wc-route-insert>
+          <wc-route path="/route/with/nested/base" style="">route 1, in the parent base</wc-route> 
+          <wc-route-base current="">
+            <p>the nested base</p>
+            <wc-route-insert>
+              <wc-route path="/route/with/nested/base/2" current="" style="">route 2</wc-route>
+              <wc-route path="/route/with/nested/base/3">route 3</wc-route>
+            </wc-route-insert>
+          </wc-route-base>
+        </wc-route-insert>`
+      assert.strictEqual(innerHTML.trim(), expected)
+
+      // TWICE cause we navigated twice
+      await page.goBack()
       await page.goBack()
     })
   });

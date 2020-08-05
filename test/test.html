@@ -8,7 +8,7 @@
   </head>
   <body>
     <wc-router>
-      <wc-route path="/">
+      <wc-route path="/" p-title="main page">
           hi !, this is the first page !
           <br>
           <p>check out these other pages</p>
@@ -23,16 +23,17 @@
           <r-a href="/route/with/base/2">another route with the same base</r-a><br>
           <r-a href="/route/with/another/base">another route with a different base</r-a><br>
           <r-a href="/route/with/another/base/2">another another route on the different base</r-a><br>
+          <r-a href="/route/with/nested/base">a route in a nested base</r-a><br>
           <r-a href="/non/existant/link">load catch all page</r-a><br>
       </wc-route>
-      <wc-route path="/one-level">
+      <wc-route path="/one-level" p-title="one level page">
         <p>this is a one-level page</p>
       </wc-route>
       <wc-route path="/test-load-route" file="/test/test_files/test_load_route.html"></wc-route>
       <wc-route path="/one-level/two-level">
         <p>this is a two-level page</p>
       </wc-route>
-      <wc-route path="/one-level/two-level/3/4/5/6">
+      <wc-route path="/one-level/two-level/3/4/5/6" p-title="six level page">
         <p>this is a 6-level page</p>
       </wc-route>
       <wc-route path="/:anything"
@@ -59,6 +60,33 @@
         <wc-route-insert>
           <wc-route path="/route/with/another/base">route 1</wc-route>
           <wc-route path="/route/with/another/base/2">route 2</wc-route>
+        </wc-route-insert>
+      </wc-route-base>
+
+      <wc-route-base id="base2">
+        <p>base loaded without file parameter</p>
+        <r-a href="/route/with/another/base">route 1</r-a>
+        <r-a href="/route/with/another/base/2">route 2</r-a>
+        <wc-route-insert>
+          <wc-route path="/route/with/another/base">route 1</wc-route>
+          <wc-route path="/route/with/another/base/2">route 2</wc-route>
+        </wc-route-insert>
+      </wc-route-base>
+
+      <wc-route-base id="base3">
+        <p>base loaded without file parameter, in a nested base</p>
+        <r-a href="/route/with/nested/base">route 1 (in only the parent base)</r-a><br>
+        <r-a href="/route/with/nested/base/2">route 2 (in the nested base)</r-a><br>
+        <r-a href="/route/with/nested/base/3">route 3 (in the nested base)</r-a><br>
+        <wc-route-insert>
+          <wc-route path="/route/with/nested/base">route 1, in the parent base</wc-route> 
+          <wc-route-base>
+            <p>the nested base</p>
+            <wc-route-insert>
+              <wc-route path="/route/with/nested/base/2">route 2</wc-route>
+              <wc-route path="/route/with/nested/base/3">route 3</wc-route>
+            </wc-route-insert>
+          </wc-route-base>
         </wc-route-insert>
       </wc-route-base>
 
