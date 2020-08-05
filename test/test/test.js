@@ -282,7 +282,13 @@ describe('all tests', function () {
       const detail = (await Promise.all([page.click('r-a[href="/route/with/nested/base/2"]'), 
                                          page.evaluate(waitRouteLoad)]))[1][0]
       assert.ok(detail.routeBase.fullyActive) 
-      await page.goBack()
+
+      const hiddenEvent = () => {
+        const wcroute = document.querySelector("wc-route[path='/route/with/nested/base/2']")
+        const base = wcroute.bases[0]
+        return new Promise(res => base.addEventListener("hidden", res))
+      }
+      await Promise.all([page.goBack(), page.evaluate(hiddenEvent)]);
 
       const query = "wc-route[path='/route/with/nested/base/2']"
       assert.ok(!await page.evaluate(q => document.querySelector(q).fullyActive, query))

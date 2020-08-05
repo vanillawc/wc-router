@@ -96,7 +96,7 @@ i.e. `window.wcrouter.addEventListener(<event-name>, <callback>)`
   - **callback parameters:**
     + **event.detail.currentRoute**: the current route
 
-### wc-route events
+### wc-route events/wc-route-base
 
 these events occur in every `<wc-route>` object
 
@@ -107,31 +107,33 @@ document.querySelector("wc-route[path='/some/path']").addEventListener(event, ca
 ```
 
 - **load**:
-  - **when :** called the first time a route is loaded
+  - **when :** called the first time a route/base is loaded
   - **usage :** heavy pre content loading operations
   - **callback parameters:**
     + **event.detail.wcroute**: this route
+    + **event.detail.waitForContent**: (function that returns a promise) wait for the content to load
 
 - **loadContentLoaded**:
-  - **when :** called the first time a route is loaded
+  - **when :** called the first time a route/base is loaded
   - **usage :** dom operations
   - **callback parameters:**
     + **event.detail.wcroute**: this route
 
 - **shown**:
-  - **when :** called every time a route is loaded
+  - **when :** called every time a route/base is rendered
   - **usage :** heavy pre content loading operations
   - **callback parameters:**
     + **event.detail.wcroute**: this route
+    + **event.detail.waitForContent**: (function that returns a promise) wait for the content to load
 
 - **shownContentLoaded**:
-  - **when :** called every time a route is loaded
+  - **when :** called every time a route/base is rendered
   - **usage :** dom operations
   - **callback parameters:**
     + **event.detail.wcroute**: this route
 
 - **hidden**:
-  - **when :** called every time a route is hidden
+  - **when :** called every time a route/base is hidden
   - **usage :** dom operations
   - **callback parameters:**
     + **event.detail.wcroute**: this route
@@ -151,6 +153,8 @@ document.querySelector("wc-route[path='/some/path']").addEventListener(event, ca
 - **p-title**: the to-set page title
 
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
+
+### wc-route
 
 ### Serving files (with a test server)
 `deno run --allow-net --allow-read --unstable https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2/server.ts <main_file_name>`
