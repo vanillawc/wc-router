@@ -96,7 +96,7 @@ i.e. `window.wcrouter.addEventListener(<event-name>, <callback>)`
   - **callback parameters:**
     + **event.detail.currentRoute**: the current route
 
-### wc-route events/wc-route-base
+### wc-route/wc-route-base events
 
 these events occur in every `<wc-route>` object
 
