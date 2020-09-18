@@ -19,6 +19,7 @@ script tags:
 ### Tags here
 
 - `<wc-route-base>`
+- `<wc-route-insert>`
 - `<wc-router>`
 - `<wc-route>`
 - `<r-a>`
