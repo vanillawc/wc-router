@@ -8,7 +8,7 @@ go up, go down, now turn left, nope its not there
 
 script tags:
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2/src/index.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/vanillawc/wc-router@2.2.4/src/index.js"></script>
 ```
 
 ## Usage NOTE
