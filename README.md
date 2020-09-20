@@ -39,7 +39,10 @@ is loaded first, then if the <wc-route-base> tags html contains a
 <wc-route> tag, and then the route is rendered and shown
 -->
 <wc-router>
-  <wc-route path="/" file="/pages/page1.html" p-title="page 1"></wc-route>
+  <wc-route path="/" 
+            file="/pages/page1/page1.html" 
+            p-title="page 1"
+            css-path="/pages/page1/page1.css"></wc-route>
   <wc-route path="/page2" file="/pages/page2.html" p-title="page 2"></wc-route>
   <wc-route path="/page3" file="/pages/page3.html" p-title="page 3" eager></wc-route>
   <wc-route-base file="/pages/cats/base.html">
@@ -152,6 +155,7 @@ document.querySelector("wc-route[path='/some/path']").addEventListener(event, ca
   - if you start a route-part with a ":" for eg: **"/asdcasdc/:param/def**, its treated as a string (and is visible from the 'wcrouter' variable in the window, in 'wc-router.params', with the word after ':' as the variable)
   - if you start a route-part with "path:", eg: **"/asadc/path:sometgin"**, note this is only possible for route-parts in the end, all further part parts will be visible in 'wc-router.params["your-var"]'
 - **p-title**: the to-set page title
+- **css-path**: a css link tag will be created and it will ONLY be active when the wc-route is active, (i.e. when the url's route is the wc-route's route), else it'll be set to disabled, the link tag is also lazy loaded unless the eager tag is specified
 
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
 

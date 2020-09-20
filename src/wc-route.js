@@ -22,6 +22,9 @@ export default class WCRoute extends HTMLElement{
     this.contentLoaded = false
     if(!this.hasAttribute("file")) this.contentLoaded = true
     this.fullyActive = false
+
+    // sets the css link as disabled when unused
+    this.cssLink = undefined
   }
 
   static get observedAttributes() {
@@ -45,6 +48,7 @@ export default class WCRoute extends HTMLElement{
 
   async _setupAsCurrent(){
     this._setFirstLoadVar()
+    this._setCSSLinkIfNeeded()
     this._dispatchPreContentLoadedEvents()
     this._setStyleDisplayHidden()
     await this.getContent()
@@ -58,6 +62,7 @@ export default class WCRoute extends HTMLElement{
 
   async _teardownAsCurrent(){
     this.fullyActive = false
+    this._disableCSSLinkIfNeeded()
     this.dispatchEvent(new CustomEvent("hidden", {detail: {wcroute:this}}))
 
     // if the teardown is called while there is another route marked as current
@@ -256,6 +261,31 @@ export default class WCRoute extends HTMLElement{
 
   _removeStyleDisplayHidden(){
     this.style.display = ""
+  }
+
+  _setCSSLinkIfNeeded(){
+    if(this.hasAttribute("css-path")){
+      this._getCSSLinkIfNeeded();
+      this.cssLink.removeAttribute("disabled");
+    }
+  }
+
+  _getCSSLinkIfNeeded(){
+    if(this.hasAttribute("css-path") && this.cssLink === undefined){
+      const link = document.createElement('link');
+      link.rel = "stylesheet";
+      link.href = this.getAttribute("css-path");
+      link.type = "text/css";
+      document.body.appendChild(link)
+      this.cssLink = link
+    }
+
+  }
+
+  _disableCSSLinkIfNeeded(){
+    if(this.cssLink){
+      this.cssLink.setAttribute("disabled", "")
+    }
   }
 }
 

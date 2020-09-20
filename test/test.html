@@ -28,6 +28,7 @@
           <r-a href="/route/with/nested/base/2">another route in the same nested base</r-a><br>
           <r-a href="/route/with/nested/base/3">another (3rd) route in the same nested base</r-a><br>
           <r-a href="/non/existant/link">load catch all page</r-a><br>
+          <r-a href="/route/with/page/only/css">route with css only for this page</r-a>
       </wc-route>
       <wc-route path="/one-level" p-title="one level page">
         <p>this is a one-level page</p>
@@ -92,6 +93,10 @@
           </wc-route-base>
         </wc-route-insert>
       </wc-route-base>
+
+        <wc-route path="/route/with/page/only/css" 
+                  file="/test/test_files/csspage.html"
+                  css-path="/test/test_files/csspage.css"></wc-route>
 
       <wc-route path="/path:value">
         <p>this is the catch-all page</p>

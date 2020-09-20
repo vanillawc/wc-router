@@ -1,0 +1,7 @@
+:root {
+    --test-css-color: brown;
+}
+
+p{
+    color: var(--test-css-color);
+}

@@ -325,6 +325,20 @@ describe('all tests', function () {
       await page.goBack()
       await page.goBack()
     })
+
+    it("test page specific css", async () => {
+      const checkTestCSSProperty = async () => {
+        return getComputedStyle(document.documentElement).getPropertyValue("--test-css-color")
+      }
+      const colorInit = (await page.evaluate(checkTestCSSProperty)).trim();
+      assert.strictEqual(colorInit, "")
+      await page.click('r-a[href="/route/with/page/only/css"]')
+      const colorWhen = (await page.evaluate(checkTestCSSProperty)).trim();
+      assert.strictEqual(colorWhen, "brown")
+      await page.goBack()
+      const colorPost = (await page.evaluate(checkTestCSSProperty)).trim();
+      assert.strictEqual(colorPost, "")
+    })
   });
 });
 
