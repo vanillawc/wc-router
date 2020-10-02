@@ -26,6 +26,25 @@ class RouterTools extends EventTarget{
   }
 
   /**
+   * get the currentPath ignorant of hashStrategy or normal strategy
+   *
+   * @returns {string}
+   */
+  get currentPath(){
+    if(this.hashStrategy){
+      return location.hash.substring(1);
+    }
+    else return location.pathname;
+  }
+
+  /**
+   * @returns {bool}
+   */
+  get hashStrategy(){
+    return this.mainrouter.hasAttribute("hashStrategy")
+  }
+
+  /**
    * set the correct wcroute to current
    *
    * @param {string} path - the path to set
@@ -85,11 +104,19 @@ class RouterTools extends EventTarget{
     })
   }
 
+  /**
+   * change the current page location
+   * changes the location based on if hashLocationStrategy or normal mode
+   *
+   * @param path {string} - the path to change the history to
+   */
   routeHistory(path){ 
-    if(window.history) {
-      if(location.pathname === path||location.pathname === path + "/")
-        return
-      else history.pushState({}, "", path)
+    if(this.hashStrategy) location.hash = path
+    else{
+      if(window.history) {
+        if(location.pathname === path||location.pathname === path + "/") return
+        else history.pushState({}, "", path)
+      }
     }
   }
 
@@ -101,16 +128,36 @@ class RouterTools extends EventTarget{
 window.wcrouter = new RouterTools()
 
 window.addEventListener('DOMContentLoaded', () => {
-  wcrouter.route(location.pathname)
+  wcrouter.route(wcrouter.currentPath);
   const wcroutes = [...document.getElementsByTagName("wc-route")]
   loadEagerRoutes()
 });
 
 
-window.addEventListener("popstate", () => {
-  hideAllWCRouteBases()
-  wcrouter.route(location.pathname)
-})
+function setAutoURLRoute(){
+  if(wcrouter.hashStrategy){
+    // this is needed as
+    // r-a/wcrouter.route() change the hash too
+    // so if hashchange is called everytime
+    // and not just when the hash automatically changes (for example when the back btn is pressed)
+    // the wcrouter.route() will run twice
+    let lastPath = wcrouter.currentPath;
+
+    window.addEventListener("hashchange", () => {
+      hideAllWCRouteBases()
+      if (lastPath === wcrouter.currentPath) return;
+
+      wcrouter.route(wcrouter.currentPath)
+      lastPath = wcrouter.currentPath;
+    })
+  }
+  else {
+    window.addEventListener("popstate", () => {
+      hideAllWCRouteBases()
+      wcrouter.route(location.pathname)
+    })
+  }
+}
 
 function loadEagerRoutes(){
   const wcroutes = [...document.getElementsByTagName("wc-route")]
@@ -135,4 +182,10 @@ async function getStyleSheet(){
   document.getElementsByTagName("wc-router").style = ""
 }
 
-getStyleSheet()
+function main(){
+  getStyleSheet()
+  setAutoURLRoute()
+}
+
+main()
+
