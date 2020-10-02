@@ -156,6 +156,7 @@ document.querySelector("wc-route[path='/some/path']").addEventListener(event, ca
   - if you start a route-part with "path:", eg: **"/asadc/path:sometgin"**, note this is only possible for route-parts in the end, all further part parts will be visible in 'wc-router.params["your-var"]'
 - **p-title**: the to-set page title
 - **css-path**: a css link tag will be created and it will ONLY be active when the wc-route is active, (i.e. when the url's route is the wc-route's route), else it'll be set to disabled, the link tag is also lazy loaded unless the eager tag is specified
+- **hashStrategy**: [experimental, untested code] use hash routing instead of standard routing
 
 [boolean attribute]: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes#Boolean_Attributes
 
